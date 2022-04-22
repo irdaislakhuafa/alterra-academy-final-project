@@ -3,6 +3,7 @@ package com.irdaislakhuafa.alterraacademyfinalproject.utils;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -15,5 +16,7 @@ public class ApiResponse<A> {
     private ApiMessage message;
     private Exception error;
     private A data;
-    private LocalDateTime timestamp;
+
+    @Builder.Default
+    private LocalDateTime timestamp = LocalDateTime.now();
 }
