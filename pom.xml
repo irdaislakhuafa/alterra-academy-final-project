@@ -87,6 +87,10 @@
 						<goals>
 							<goal>prepare-agent</goal>
 						</goals>
+						<configuration>
+							<destFile>${project.build.directory}/code-coverage/jacoco.exec</destFile>
+							<propertyName>surefireArgLine</propertyName>
+						</configuration>
 					</execution>
 
 					<!-- write report to file (default: index.html) -->
