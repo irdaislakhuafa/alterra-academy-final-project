@@ -16,14 +16,8 @@
 	<properties>
 		<java.version>11</java.version>
 	</properties>
-	<dependencies>
-		<!-- <dependency>
-			<groupId>org.jacoco</groupId>
-			<artifactId>jacoco</artifactId>
-			<version>0.8.8</version>
-			<type>pom</type>
-		</dependency> -->
 
+	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -80,17 +74,15 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.8</version>
+				<configuration>
+					<excludes>**/utils/**</excludes>
+				</configuration>
+
 				<executions>
-					<!-- prepare-agent: get records code has been executed -->
 					<execution>
-						<id>prepare-agent</id>
 						<goals>
 							<goal>prepare-agent</goal>
 						</goals>
-						<configuration>
-							<destFile>${project.build.directory}/code-coverage/jacoco.exec</destFile>
-							<propertyName>surefireArgLine</propertyName>
-						</configuration>
 					</execution>
 
 					<!-- write report to file (default: index.html) -->
