@@ -119,7 +119,7 @@ jobs:
           key: ${{ secrets.SERVER_SECRET_KEY }}
           port: ${{ secrets.SSH_PORT }}
           scripts: |
-            cd Apps/irdaislakhuafa/school-library/env
+            cd ~/Apps/irdaislakhuafa/school-library/env
             
             containerName="school-library"
             imageName="irdaislakhuafa/school-library:latest"
@@ -133,3 +133,4 @@ jobs:
             fi
 
             docker-compose up -d
+            pwd
