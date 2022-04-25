@@ -43,6 +43,9 @@ jobs:
     needs: tests
     runs-on: ubuntu-latest
     steps:
+      - name: Clone repository to GitHub Enviroment
+        uses: actions/checkout@v1
+
       - name: Restore maven cache
         uses: skjolber/maven-cache-github-action@v1
         with:
