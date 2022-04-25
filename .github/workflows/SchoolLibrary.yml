@@ -49,7 +49,7 @@ jobs:
           step: restore
 
       - name: Build package
-        run: mvn clean package -DskipTests
+        run: mvn package -DskipTests
 
       - name: Login to my Docker
         uses: docker/login-action@v1
