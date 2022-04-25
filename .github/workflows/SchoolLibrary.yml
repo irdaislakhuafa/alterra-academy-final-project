@@ -25,5 +25,15 @@ jobs:
            java-version: "11"
            distribution: "temurin"
 
+       - name: Restore maven cache
+         uses: skjolber/maven-cache-github-action@v1
+         with:
+           step: restore 
+           
        - name: Running `mvn test`
-         run: mvn test
+         run: mvn test verify
+
+       - name: Save maven cache
+         uses: skjolber/maven-cache-github-action@v1
+         with:
+           step: save
