@@ -1,0 +1,29 @@
+name: Schooll Library RESTFULL API Project  
+
+on:
+  push:
+    branches:
+      - dev
+      - ci/cd
+      
+  pull_request:
+    branches: 
+      - dev
+      - ci/cd
+
+jobs:
+  tests:
+     name: Testing Application
+     runs-on: ubuntu-latest
+     steps:
+       - name: Clone repository to GitHub Enviroment
+         uses: actions/checkout@v1
+
+       - name: Setup JDK Enviroment
+         uses: actions/setup-java@v3
+         with:
+           java-version: "11"
+           distribution: "temurin"
+
+       - name: Running `mvn test`
+         run: mvn test
