@@ -1,0 +1,136 @@
+name: Schooll Library RESTFULL API Project  
+
+on:
+  push:
+    branches:
+      - dev
+      - master
+      
+  pull_request:
+    branches: 
+      - dev
+      - master
+
+jobs:
+  tests:
+     name: Testing Application
+     runs-on: ubuntu-latest
+     steps:
+       - name: Clone repository to GitHub Enviroment
+         uses: actions/checkout@v1
+
+       - name: Setup JDK Enviroment
+         uses: actions/setup-java@v3
+         with:
+           java-version: "11"
+           distribution: "temurin"
+
+       - name: Restore maven cache
+         uses: skjolber/maven-cache-github-action@v1
+         with:
+           step: restore 
+           
+       - name: Running `mvn test`
+         run: mvn test verify
+
+       - name: Save maven cache
+         uses: skjolber/maven-cache-github-action@v1
+         with:
+           step: save
+
+  build: 
+    name: Building Java Archive with Maven and Build Docker image and push it to Dockerhub
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository to GitHub Enviroment
+        uses: actions/checkout@v1
+
+      - name: Restore maven cache
+        uses: skjolber/maven-cache-github-action@v1
+        with:
+          step: restore
+
+      - name: Build package
+        run: mvn clean package -DskipTests && cp -rv ./target/*.war ./env/school-library.war
+
+      - name: Login to my Docker
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      
+      - name: Build and Push Docker Images
+        uses: docker/build-push-action@v2
+        with:
+          context: ./env/
+          push: true
+          tags: irdaislakhuafa/school-library:latest
+
+      - name: Save maven cache
+        uses: skjolber/maven-cache-github-action@v1
+        with:
+          step: save
+
+  setup_server_env: 
+    name: Setup server enviroment
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Clone repository to GitHub Enviroment
+        uses: actions/checkout@v1
+
+      - name: Preparing app directory
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SECRET_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd
+            appDir="$(ls Apps/irdaislakhuafa/ | grep school-library)"
+            if [ "$appDir" = "" ]; then 
+              mkdir -pv Apps/irdaislakhuafa/school-library
+            else 
+              rm -rfv Apps/irdaislakhuafa/school-library/*
+            fi
+      
+      - name: Copy resource file to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SECRET_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "env/*"
+          target: ${{ secrets.SERVER_TARGET_DIR }}
+  
+  deploy: 
+    name: Deploy app to server
+    runs-on: ubuntu-latest
+    needs: setup_server_env
+    steps:
+      - name: Preparing container and image
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SECRET_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ~/Apps/irdaislakhuafa/school-library/env
+            
+            containerName="school-library"
+            imageName="irdaislakhuafa/school-library:latest"
+            
+            docker stop "$containerName"
+            docker rmi "$imageName"
+
+            isPostgreSQLAvilable="$(docker ps | grep postgre)"
+            if [ "$isPostgreSQLAvilable" = "" ]; then
+              docker-compose -f postgresql-compose.yml up -d
+            fi
+
+            docker-compose up -d
+            pwd

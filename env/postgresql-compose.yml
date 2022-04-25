@@ -1,0 +1,17 @@
+version: "2"
+
+services: 
+  school_library_db: 
+    image: postgres:latest
+    container_name: school-library-db
+    restart: on-failure
+    networks:
+      - net-school-library
+    ports: 
+      - 5432:5432
+    env_file: 
+      ./db.env 
+
+networks:
+  net-school-library:
+    name: net-school-library
