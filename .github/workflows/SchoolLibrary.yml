@@ -123,12 +123,13 @@ jobs:
             
             containerName="school-library"
             imageName="irdaislakhuafa/school-library:latest"
+            
+            docker stop "$containerName"
+            docker rmi "$imageName"
 
             isPostgreSQLAvilable="$(docker ps | grep postgre)"
             if [ "$isPostgreSQLAvilable" = "" ]; then
               docker-compose -f "postgresql-compose.yml" up -d
             fi
 
-            docker stop "$containerName"
-            docker rmi "$imageName"
             docker-compose up -d
