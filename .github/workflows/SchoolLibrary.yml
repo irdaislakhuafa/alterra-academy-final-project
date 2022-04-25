@@ -37,3 +37,21 @@ jobs:
          uses: skjolber/maven-cache-github-action@v1
          with:
            step: save
+
+  build: 
+    name: Building Java Archive with Maven
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restore maven cache
+        uses: skjolber/maven-cache-github-action@v1
+        with:
+          step: restore
+
+      - name: Build package
+        run: mvn clean package -DskipTests
+
+      - name: Save maven cache
+        uses: skjolber/maven-cache-github-action@v1
+        with:
+          step: save
