@@ -100,6 +100,6 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SECRET_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: "./env/docker-compose.yml,./env/server.env"
+          source: "pom.xml"
           target: ${{ secrets.SERVER_TARGET_DIR }}
         
