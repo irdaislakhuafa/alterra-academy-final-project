@@ -118,7 +118,7 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SECRET_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          scripts: |
+          script: |
             cd ~/Apps/irdaislakhuafa/school-library/env
             
             containerName="school-library"
@@ -129,7 +129,7 @@ jobs:
 
             isPostgreSQLAvilable="$(docker ps | grep postgre)"
             if [ "$isPostgreSQLAvilable" = "" ]; then
-              docker-compose -f "postgresql-compose.yml" up -d
+              docker-compose -f postgresql-compose.yml up -d
             fi
 
             docker-compose up -d
