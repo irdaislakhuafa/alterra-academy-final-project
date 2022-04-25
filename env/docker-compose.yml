@@ -6,11 +6,12 @@ services:
     container_name: school-library
     restart: on-failure
     networks:
-      - net_school-library
+      - net-school-library
     ports:
       - 80:8080
-    # env_file: 
-    #   - ./server.env
+    env_file: 
+      - ./app.env
 networks:
-  net_school-library: 
+  net-school-library: 
+    name: net-school-library
   

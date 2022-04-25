@@ -103,6 +103,32 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SECRET_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: "env/docker-compose.yml,env/server.env"
+          source: "env/*"
           target: ${{ secrets.SERVER_TARGET_DIR }}
-        
+  
+  deploy: 
+    name: Deploy app to server
+    runs-on: ubuntu-latest
+    needs: setup_server_env
+    steps:
+      - name: Preparing container and image
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SECRET_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          scripts: |
+            cd Apps/irdaislakhuafa/school-library/env
+            
+            containerName="school-library"
+            imageName="irdaislakhuafa/school-library:latest"
+
+            isPostgreSQLAvilable="$(docker ps | grep postgre)"
+            if [ "$isPostgreSQLAvilable" = "" ]; then
+              docker-compose -f "postgresql-compose.yml" up -d
+            fi
+
+            docker stop "$containerName"
+            docker rmi "$imageName"
+            docker-compose up -d
