@@ -8,7 +8,6 @@ import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AuthorDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Author;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiChangeRequests;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiTargetIdRequest;
-import com.irdaislakhuafa.alterraacademyfinalproject.model.services.AddressService;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.services.AuthorService;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiMessage;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiResponse;
@@ -34,7 +33,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AuthorController {
     private final AuthorService authorService;
-    private final AddressService addressService;
     public final ApiValidation apiValidation;
 
     @GetMapping
