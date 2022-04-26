@@ -19,4 +19,6 @@ public interface BaseService<A, B> {
     public A mapToEntity(B dto);
 
     public List<A> mapToEntities(List<B> dtos);
+
+    public List<A> findAllById(List<String> ids);
 }

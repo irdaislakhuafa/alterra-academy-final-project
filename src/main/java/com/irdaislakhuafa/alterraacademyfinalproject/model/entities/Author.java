@@ -34,7 +34,7 @@ public class Author extends BaseEntity {
     private String email;
 
     @OneToMany
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "address_id")
     @Builder.Default
-    private List<Author> authors = new ArrayList<>();
+    private List<Address> address = new ArrayList<>();
 }

@@ -9,13 +9,12 @@ import javax.transaction.Transactional;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AddressDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Address;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.AddressRepository;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.services.utils.LogMessage;
 
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -24,49 +23,49 @@ public class AddressService implements BaseService<Address, AddressDto> {
 
     @Override
     public Optional<Address> save(Address entity) {
-        log.info("Saving new address");
+        LogMessage.logSave(entity);
         var savedAddress = Optional.of(addressRepository.save(entity));
-        log.info("Success saveing new address");
+        LogMessage.logSuccessSave(entity);
         return savedAddress;
     }
 
     @Override
     public Optional<Address> update(Address entity) {
-        log.info("Updating address id: " + entity.getId());
+        LogMessage.logUpdate(entity);
         var updatedAddress = Optional.of(addressRepository.save(entity));
-        log.info("Success updating address id: " + entity.getId());
+        LogMessage.logSuccessUpdate(entity);
         return updatedAddress;
     }
 
     @Override
     public Optional<Address> findById(String id) {
-        log.info("Preparing get address with id: " + id);
+        LogMessage.logPrepareFindById(Address.builder().id(id).build());
         var address = addressRepository.findById(id);
 
         if (!address.isPresent()) {
-            log.info("Address with id: " + id + " not found");
+            LogMessage.logEntityNotFound(Address.builder().id(id).build());
             return Optional.empty();
         }
-        log.info("Found address with id: " + id);
+        LogMessage.logEntityFound(Address.builder().id(id).build());
         return address;
     }
 
     @Override
     public List<Address> findAll() {
-        log.info("Find all address");
+        LogMessage.logFindAll(new Address());
         var allAddress = addressRepository.findAll();
-        log.info("Success get all address");
+        LogMessage.logFindAll(new Address());
         return allAddress;
     }
 
     @Override
     public boolean deleteById(String id) {
         if (!this.existsById(id)) {
-            log.info("Address with id: " + id + " not found");
+            LogMessage.logEntityNotFound(Address.builder().id(id).build());
             return false;
         }
-        log.info("Success delete address id: " + id);
         addressRepository.deleteById(id);
+        LogMessage.logSuccessDelete(Address.builder().id(id).build());
         return true;
     }
 
@@ -77,18 +76,23 @@ public class AddressService implements BaseService<Address, AddressDto> {
 
     @Override
     public Address mapToEntity(AddressDto dto) {
-        log.info("Mapping address dto to entity");
+        LogMessage.logMapDtoToEntity(new Address());
         var address = Address.builder()
                 .city(dto.getCity())
                 .country(dto.getCountry())
                 .build();
-        log.info("Success address dto to entity");
+        LogMessage.logSuccessMapDtoToEntity(address);
         return address;
     }
 
     @Override
     public List<Address> mapToEntities(List<AddressDto> dtos) {
         return dtos.stream().map((dto) -> this.mapToEntity(dto)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Address> findAllById(List<String> ids) {
+        return addressRepository.findAllById(ids);
     }
 
 }

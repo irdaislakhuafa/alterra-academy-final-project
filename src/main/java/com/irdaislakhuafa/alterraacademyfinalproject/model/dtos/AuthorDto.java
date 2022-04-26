@@ -36,5 +36,5 @@ public class AuthorDto {
     private String email;
 
     @Builder.Default
-    private List<String> addressId = new ArrayList<>();
+    private List<String> addressIds = new ArrayList<>();
 }
