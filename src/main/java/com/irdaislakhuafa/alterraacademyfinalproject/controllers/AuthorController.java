@@ -1,8 +1,5 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.validation.Valid;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AuthorDto;
@@ -10,8 +7,8 @@ import com.irdaislakhuafa.alterraacademyfinalproject.model.services.AddressServi
 import com.irdaislakhuafa.alterraacademyfinalproject.model.services.AuthorService;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiMessage;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiResponse;
+import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthorController {
     private final AuthorService authorService;
     private final AddressService addressService;
+    public final ApiValidation apiValidation;
 
     @GetMapping
     public ResponseEntity<?> findAll() {
@@ -66,15 +64,9 @@ public class AuthorController {
 
         if (errors.hasErrors()) {
             log.error("Error validation");
-            List<String> errorMessages = new ArrayList<>();
-
-            for (var error : errors.getFieldErrors()) {
-                errorMessages.add(error.getDefaultMessage());
-            }
-
             apiResponse = ApiResponse.builder()
                     .message(ApiMessage.FAILED)
-                    .error(errorMessages)
+                    .error(apiValidation.getErrorMessages(errors))
                     .build();
             responses = ResponseEntity.badRequest().body(apiResponse);
 
