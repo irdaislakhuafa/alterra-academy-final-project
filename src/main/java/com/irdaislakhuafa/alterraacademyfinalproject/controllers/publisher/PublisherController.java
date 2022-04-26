@@ -1,8 +1,13 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.controllers.publisher;
 
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.PublisherDto;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.PublisherDtoWithoutAddress;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Publisher;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiChangeRequests;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.services.AddressService;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.services.PublisherService;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiMessage;
@@ -13,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -84,6 +90,67 @@ public class PublisherController {
                     .data(null)
                     .build();
             responses = ResponseEntity.internalServerError().body(apiResponse);
+        }
+
+        return responses;
+    }
+
+    @PutMapping
+    public ResponseEntity<?> update(
+            @RequestBody @Valid ApiChangeRequests<PublisherDtoWithoutAddress> updateRequest,
+            Errors errors) {
+        ResponseEntity<?> responses = null;
+        ApiResponse<?> apiResponse = null;
+
+        if (errors.hasErrors()) {
+            log.error("Error validation");
+            apiResponse = ApiResponse.builder()
+                    .message(ApiMessage.FAILED)
+                    .error(apiValidation.getErrorMessages(errors))
+                    .data(null)
+                    .build();
+            responses = ResponseEntity.badRequest().body(apiResponse);
+
+        } else {
+            try {
+                var publisher = publisherService.findById(updateRequest.getTargetId());
+                if (!publisher.isPresent()) {
+                    apiResponse = ApiResponse.builder()
+                            .message(ApiMessage.FAILED)
+                            .error("data with id: " + updateRequest.getTargetId() + " not found")
+                            .data(null)
+                            .build();
+                    responses = ResponseEntity.badRequest().body(apiResponse);
+
+                } else {
+                    var address = publisher.get().getAddress();
+                    publisher = Optional.of(
+                            Publisher.builder()
+                                    .name(updateRequest.getData().getName())
+                                    .email(updateRequest.getData().getEmail())
+                                    .address(address)
+                                    .build());
+
+                    publisher.get().setId(updateRequest.getTargetId());
+
+                    var updatedPublisher = publisherService.update(publisher.get());
+                    apiResponse = ApiResponse.builder()
+                            .message(ApiMessage.SUCCESS)
+                            .error(null)
+                            .data(updatedPublisher)
+                            .build();
+                    responses = ResponseEntity.ok().body(apiResponse);
+                }
+            } catch (Exception e) {
+                log.error("Error: " + e.getMessage());
+                e.printStackTrace();
+                apiResponse = ApiResponse.builder()
+                        .message(ApiMessage.ERROR)
+                        .error(e.getMessage())
+                        .data(null)
+                        .build();
+                responses = ResponseEntity.internalServerError().body(apiResponse);
+            }
         }
 
         return responses;

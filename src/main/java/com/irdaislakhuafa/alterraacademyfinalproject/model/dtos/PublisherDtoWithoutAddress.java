@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class PublisherDto {
+public class PublisherDtoWithoutAddress {
     @NotNull(message = "name cannot be null")
     @NotEmpty(message = "name cannot be empty")
     @NotBlank(message = "name cannot be blank")
@@ -28,6 +28,4 @@ public class PublisherDto {
     @Email(message = "email not valid")
     private String email;
 
-    @NotNull(message = "address cannot be null")
-    private AddressDto address;
 }
