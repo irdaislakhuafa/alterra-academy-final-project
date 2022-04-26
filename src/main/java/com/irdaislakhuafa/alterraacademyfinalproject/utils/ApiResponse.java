@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class ApiResponse<A> {
     private ApiMessage message;
-    private Exception error;
+    private Object error;
     private A data;
 
     @Builder.Default
