@@ -17,6 +17,7 @@ import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -181,6 +182,52 @@ public class AuthorAddressController {
                     .data(address)
                     .build();
             return ResponseEntity.ok(apiResponse);
+
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            apiResponse = ApiResponse.builder()
+                    .message(ApiMessage.ERROR)
+                    .error(e.getMessage())
+                    .data(null)
+                    .build();
+            return ResponseEntity.internalServerError().body(apiResponse);
+        }
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteById(@RequestBody @Valid ApiTargetIdRequest request, Errors errors) {
+        ApiResponse<?> apiResponse = null;
+
+        if (errors.hasErrors()) {
+            log.warn("Validation error");
+            apiResponse = ApiResponse.builder()
+                    .message(ApiMessage.FAILED)
+                    .error(this.apiValidation.getErrorMessages(errors))
+                    .data(null)
+                    .build();
+            return ResponseEntity.badRequest().body(apiResponse);
+        }
+
+        try {
+            log.info("Validation is valid");
+            var targetDeleted = this.addressService.findById(request.getTargetId());
+
+            if (targetDeleted.isPresent()) {
+                this.addressService.deleteById(request.getTargetId());
+                apiResponse = ApiResponse.builder()
+                        .message(ApiMessage.SUCCESS)
+                        .data(targetDeleted)
+                        .error(null)
+                        .build();
+                return ResponseEntity.ok().body(apiResponse);
+            }
+
+            apiResponse = ApiResponse.builder()
+                    .message(ApiMessage.FAILED)
+                    .error("Address with id: " + request.getTargetId() + " not found")
+                    .data(null)
+                    .build();
+            return ResponseEntity.badRequest().body(apiResponse);
 
         } catch (Exception e) {
             log.error("Error: " + e.getMessage());
