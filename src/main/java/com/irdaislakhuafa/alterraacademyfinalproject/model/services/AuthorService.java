@@ -82,7 +82,6 @@ public class AuthorService implements BaseService<Author, AuthorDto> {
                 .firstName(dto.getFirstName())
                 .lastName(dto.getLastName())
                 .email(dto.getEmail())
-                .address(addressService.mapToEntities(dto.getAddress()))
                 .build();
     }
 

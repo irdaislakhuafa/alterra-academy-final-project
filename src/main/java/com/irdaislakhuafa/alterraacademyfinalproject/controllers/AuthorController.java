@@ -1,8 +1,12 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.controllers;
 
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AuthorDto;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Author;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.UpdateRequest;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.services.AddressService;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.services.AuthorService;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiMessage;
@@ -13,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -72,11 +77,7 @@ public class AuthorController {
 
         } else {
             try {
-                var savedAddress = addressService.saveAll(addressService.mapToEntities(authorDto.getAddress()));
-                var author = authorService.mapToEntity(authorDto);
-                author.setAddress(savedAddress);
-
-                var savedAuthor = authorService.save(author);
+                var savedAuthor = authorService.save(authorService.mapToEntity(authorDto));
                 apiResponse = ApiResponse.builder()
                         .message(ApiMessage.SUCCESS)
                         .error(null)
@@ -84,6 +85,67 @@ public class AuthorController {
                         .build();
                 responses = ResponseEntity.ok().body(apiResponse);
 
+            } catch (Exception e) {
+                log.error("Error: " + e.getMessage());
+                apiResponse = ApiResponse.builder()
+                        .message(ApiMessage.ERROR)
+                        .error(e.getMessage())
+                        .data(null)
+                        .build();
+                responses = ResponseEntity.internalServerError().body(apiResponse);
+            }
+        }
+
+        return responses;
+    }
+
+    @PutMapping
+    public ResponseEntity<?> update(
+            @RequestBody @Valid UpdateRequest<AuthorDto> updateRequest,
+            Errors errors) {
+
+        ResponseEntity<?> responses = null;
+        ApiResponse<?> apiResponse = null;
+
+        if (errors.hasErrors()) {
+            log.error("Error validation");
+            apiResponse = ApiResponse.builder()
+                    .message(ApiMessage.FAILED)
+                    .error(apiValidation.getErrorMessages(errors))
+                    .data(null)
+                    .build();
+            responses = ResponseEntity.badRequest().body(apiResponse);
+
+        } else {
+            try {
+                var author = authorService.findById(updateRequest.getTargetId());
+                if (!author.isPresent()) {
+                    apiResponse = ApiResponse.builder()
+                            .message(ApiMessage.FAILED)
+                            .error("data with id: " + updateRequest.getTargetId() + " not found")
+                            .data(null)
+                            .build();
+                    responses = ResponseEntity.badRequest().body(apiResponse);
+
+                } else {
+                    var address = author.get().getAddress();
+                    author = Optional.of(
+                            Author.builder()
+                                    .id(author.get().getId())
+                                    .firstName(updateRequest.getData().getFirstName().trim())
+                                    .lastName(updateRequest.getData().getLastName().trim())
+                                    .email(updateRequest.getData().getEmail().trim())
+                                    .address(address)
+                                    .build());
+
+                    var updatedAuthor = authorService.update(author.get());
+                    apiResponse = ApiResponse.builder()
+                            .message(ApiMessage.SUCCESS)
+                            .error(null)
+                            .data(updatedAuthor)
+                            .build();
+                    responses = ResponseEntity.ok().body(apiResponse);
+                }
             } catch (Exception e) {
                 log.error("Error: " + e.getMessage());
                 apiResponse = ApiResponse.builder()
