@@ -95,4 +95,9 @@ public class AddressService implements BaseService<Address, AddressDto> {
         return addressRepository.findAllById(ids);
     }
 
+    @Override
+    public List<Address> saveAll(List<Address> entities) {
+        return addressRepository.saveAll(entities);
+    }
+
 }

@@ -8,6 +8,10 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Address;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,21 +24,19 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AuthorDto {
     @NotNull(message = "first name cannot be null")
     @NotEmpty(message = "first name cannot be empty")
-    @Max(value = 100, message = "max character for first name is 100")
     private String firstName;
 
-    @Max(value = 100, message = "max character for last name is 100")
     private String lastName;
 
-    @Max(value = 100, message = "max character for email is 100")
     @NotNull(message = "email cannot be null")
     @NotEmpty(message = "email cannot be empty")
     @Email(message = "email is not valid")
     private String email;
 
     @Builder.Default
-    private List<String> addressIds = new ArrayList<>();
+    private List<AddressDto> address = new ArrayList<>();
 }

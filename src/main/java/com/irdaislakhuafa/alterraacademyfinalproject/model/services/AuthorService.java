@@ -82,7 +82,7 @@ public class AuthorService implements BaseService<Author, AuthorDto> {
                 .firstName(dto.getFirstName())
                 .lastName(dto.getLastName())
                 .email(dto.getEmail())
-                .address(addressService.findAllById(dto.getAddressIds()))
+                .address(addressService.mapToEntities(dto.getAddress()))
                 .build();
     }
 
@@ -94,6 +94,11 @@ public class AuthorService implements BaseService<Author, AuthorDto> {
     @Override
     public List<Author> findAllById(List<String> ids) {
         return authorRepository.findAllById(ids);
+    }
+
+    @Override
+    public List<Author> saveAll(List<Author> entities) {
+        return authorRepository.saveAll(entities);
     }
 
 }
