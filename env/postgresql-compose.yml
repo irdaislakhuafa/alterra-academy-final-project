@@ -13,5 +13,4 @@ services:
       ./db.env 
 
 networks:
-  net-school-library:
-    name: net-school-library
+  net-school-library: {}
