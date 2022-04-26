@@ -14,6 +14,7 @@ import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiMessage;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiResponse;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -217,6 +218,46 @@ public class AuthorController {
                 responses = ResponseEntity.internalServerError().body(apiResponse);
             }
         }
+        return responses;
+    }
+
+    @GetMapping(value = "/findBy/id")
+    public ResponseEntity<?> findById(@RequestBody @Valid ApiTargetIdRequest request, Errors errors) {
+        ResponseEntity<?> responses = null;
+        ApiResponse<?> apiResponse = null;
+
+        if (errors.hasErrors()) {
+            log.error("Error validation");
+            apiResponse = ApiResponse.builder()
+                    .message(ApiMessage.FAILED)
+                    .error(apiValidation.getErrorMessages(errors))
+                    .data(null)
+                    .build();
+            responses = ResponseEntity.badRequest().body(apiResponse);
+
+        } else {
+            log.error("Validation is valid");
+            try {
+                var author = authorService.findById(request.getTargetId());
+                var isPresent = author.isPresent();
+
+                apiResponse = ApiResponse.builder()
+                        .message((isPresent) ? ApiMessage.SUCCESS : ApiMessage.FAILED)
+                        .data((isPresent) ? author.get() : null)
+                        .error((isPresent) ? null : "author with id: " + request.getTargetId() + " not found")
+                        .build();
+                responses = new ResponseEntity<>(apiResponse, (isPresent) ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+            } catch (Exception e) {
+                log.error("Error: " + e.getMessage());
+                apiResponse = ApiResponse.builder()
+                        .message(ApiMessage.ERROR)
+                        .error(e.getMessage())
+                        .data(null)
+                        .build();
+                responses = ResponseEntity.internalServerError().body(apiResponse);
+            }
+        }
+
         return responses;
     }
 }
