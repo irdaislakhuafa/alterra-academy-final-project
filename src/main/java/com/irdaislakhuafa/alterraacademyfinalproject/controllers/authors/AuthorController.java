@@ -201,9 +201,6 @@ public class AuthorController {
                             .build();
                     responses = ResponseEntity.ok().body(apiResponse);
                     log.info("Success deleted author id: " + targetDeleted.get().getId());
-
-                    System.out.println("\033\143");
-                    System.out.println(targetDeleted.get().getAddress());
                 }
 
             } catch (Exception e) {

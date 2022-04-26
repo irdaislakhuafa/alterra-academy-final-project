@@ -8,6 +8,7 @@ import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.PublisherDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.PublisherDtoWithoutAddress;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Publisher;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiChangeRequests;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiTargetIdRequest;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.services.AddressService;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.services.PublisherService;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiMessage;
@@ -16,6 +17,7 @@ import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -153,6 +155,61 @@ public class PublisherController {
             }
         }
 
+        return responses;
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteById(
+            @RequestBody @Valid ApiTargetIdRequest deleteRequests,
+            Errors errors) {
+
+        ResponseEntity<?> responses = null;
+        ApiResponse<?> apiResponse = null;
+
+        log.info("Request delete publisher by id");
+        if (errors.hasErrors()) {
+            log.error("Error validation");
+            apiResponse = ApiResponse.builder()
+                    .message(ApiMessage.FAILED)
+                    .error(apiValidation.getErrorMessages(errors))
+                    .data(null)
+                    .build();
+            responses = ResponseEntity.badRequest().body(apiResponse);
+
+        } else {
+            log.info("Validation is valid");
+            try {
+                var targetDeleted = publisherService.findById(deleteRequests.getTargetId());
+                if (!targetDeleted.isPresent()) {
+                    log.debug("Publisher with id: " + deleteRequests.getTargetId() + " not found");
+                    apiResponse = ApiResponse.builder()
+                            .message(ApiMessage.FAILED)
+                            .error("publisher with id: " + deleteRequests.getTargetId() + " not found")
+                            .data(null)
+                            .build();
+                    responses = ResponseEntity.badRequest().body(apiResponse);
+
+                } else {
+                    publisherService.deleteById(deleteRequests.getTargetId());
+                    apiResponse = ApiResponse.builder()
+                            .message(ApiMessage.SUCCESS)
+                            .error(null)
+                            .data(targetDeleted.get())
+                            .build();
+                    responses = ResponseEntity.ok().body(apiResponse);
+                    log.info("Success deleted publisher id: " + targetDeleted.get().getId());
+                }
+
+            } catch (Exception e) {
+                log.error("Error: " + e.getMessage());
+                apiResponse = ApiResponse.builder()
+                        .message(ApiMessage.ERROR)
+                        .error(e.getMessage())
+                        .data(null)
+                        .build();
+                responses = ResponseEntity.internalServerError().body(apiResponse);
+            }
+        }
         return responses;
     }
 }
