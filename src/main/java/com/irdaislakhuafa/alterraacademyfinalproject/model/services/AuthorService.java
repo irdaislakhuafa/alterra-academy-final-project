@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthorService implements BaseService<Author, AuthorDto> {
     private final AuthorRepository authorRepository;
-    private final AddressService addressService;
 
     @Override
     public Optional<Author> save(Author entity) {

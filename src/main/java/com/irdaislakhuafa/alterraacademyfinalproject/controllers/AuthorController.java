@@ -6,7 +6,8 @@ import javax.validation.Valid;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AuthorDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Author;
-import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.UpdateRequest;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiChangeRequests;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiTargetIdRequest;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.services.AddressService;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.services.AuthorService;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiMessage;
@@ -15,6 +16,7 @@ import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -101,7 +103,7 @@ public class AuthorController {
 
     @PutMapping
     public ResponseEntity<?> update(
-            @RequestBody @Valid UpdateRequest<AuthorDto> updateRequest,
+            @RequestBody @Valid ApiChangeRequests<AuthorDto> updateRequest,
             Errors errors) {
 
         ResponseEntity<?> responses = null;
@@ -157,6 +159,64 @@ public class AuthorController {
             }
         }
 
+        return responses;
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteById(
+            @RequestBody @Valid ApiTargetIdRequest deleteRequests,
+            Errors errors) {
+
+        ResponseEntity<?> responses = null;
+        ApiResponse<?> apiResponse = null;
+
+        log.info("Request delete author by id");
+        if (errors.hasErrors()) {
+            log.error("Error validation");
+            apiResponse = ApiResponse.builder()
+                    .message(ApiMessage.FAILED)
+                    .error(apiValidation.getErrorMessages(errors))
+                    .data(null)
+                    .build();
+            responses = ResponseEntity.badRequest().body(apiResponse);
+
+        } else {
+            log.info("Validation is valid");
+            try {
+                var targetDeleted = authorService.findById(deleteRequests.getTargetId());
+                if (!targetDeleted.isPresent()) {
+                    log.debug("Author with id: " + deleteRequests.getTargetId() + " not found");
+                    apiResponse = ApiResponse.builder()
+                            .message(ApiMessage.FAILED)
+                            .error("author with id: " + deleteRequests.getTargetId() + " not found")
+                            .data(null)
+                            .build();
+                    responses = ResponseEntity.badRequest().body(apiResponse);
+
+                } else {
+                    authorService.deleteById(deleteRequests.getTargetId());
+                    apiResponse = ApiResponse.builder()
+                            .message(ApiMessage.SUCCESS)
+                            .error(null)
+                            .data(targetDeleted.get())
+                            .build();
+                    responses = ResponseEntity.ok().body(apiResponse);
+                    log.info("Success deleted author id: " + targetDeleted.get().getId());
+
+                    System.out.println("\033\143");
+                    System.out.println(targetDeleted.get().getAddress());
+                }
+
+            } catch (Exception e) {
+                log.error("Error: " + e.getMessage());
+                apiResponse = ApiResponse.builder()
+                        .message(ApiMessage.ERROR)
+                        .error(e.getMessage())
+                        .data(null)
+                        .build();
+                responses = ResponseEntity.internalServerError().body(apiResponse);
+            }
+        }
         return responses;
     }
 }
