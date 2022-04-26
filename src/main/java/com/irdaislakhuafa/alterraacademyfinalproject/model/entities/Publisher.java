@@ -1,5 +1,6 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.model.entities;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -25,7 +26,7 @@ public class Publisher extends BaseEntity {
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
     @JoinColumn(name = "address_id")
     private Address address;
 }
