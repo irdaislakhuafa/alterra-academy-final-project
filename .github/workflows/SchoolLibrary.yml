@@ -125,6 +125,7 @@ jobs:
             imageName="irdaislakhuafa/school-library:latest"
             
             docker stop "$containerName"
+            docker rm "$containerName"
             docker rmi "$imageName"
 
             isPostgreSQLAvilable="$(docker ps | grep postgre)"
