@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class InitController {
     @RequestMapping
     public String initRedirect() {
-        return "redirect:/hello-world";
+        return "redirect:/api/v1/hello-world";
     }
 }
