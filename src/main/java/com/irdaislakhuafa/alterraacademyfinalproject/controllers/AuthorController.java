@@ -16,6 +16,7 @@ import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiMessage;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiResponse;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Slf4j
 @RestController
@@ -223,7 +225,7 @@ public class AuthorController {
         return responses;
     }
 
-    @GetMapping(value = "/findBy/id")
+    @GetMapping(value = { "/findBy/id" })
     public ResponseEntity<?> findById(@RequestBody @Valid ApiTargetIdRequest request, Errors errors) {
         ResponseEntity<?> responses = null;
         ApiResponse<?> apiResponse = null;
@@ -263,7 +265,7 @@ public class AuthorController {
         return responses;
     }
 
-    @PostMapping(value = "path")
+    @PostMapping(value = { "/address" })
     public ResponseEntity<?> addAddress(
             @RequestBody @Valid ApiChangeRequests<List<AddressDto>> requests,
             Errors errors) {
@@ -320,4 +322,52 @@ public class AuthorController {
         }
     }
 
+    @PutMapping(value = { "/address" })
+    public ResponseEntity<?> updateAddress(@RequestBody @Valid ApiChangeRequests<AddressDto> requests, Errors errors) {
+        ApiResponse<?> apiRespose = null;
+
+        if (errors.hasErrors()) {
+            log.info("Validation error");
+            apiRespose = ApiResponse.builder()
+                    .message(ApiMessage.FAILED)
+                    .error(this.apiValidation.getErrorMessages(errors))
+                    .data(null)
+                    .build();
+            return ResponseEntity.badRequest().body(apiRespose);
+
+        }
+
+        try {
+            log.info("Validation is valid");
+            var address = this.addressService.findById(requests.getTargetId());
+            if (!address.isPresent()) {
+                log.info("Address with id: " + requests.getTargetId() + " not found");
+                apiRespose = ApiResponse.builder()
+                        .message(ApiMessage.FAILED)
+                        .error("Address with id: " + requests.getTargetId() + " not found")
+                        .data(null)
+                        .build();
+                return ResponseEntity.badRequest().body(apiRespose);
+            }
+
+            address = Optional.of(this.addressService.mapToEntity(requests.getData()));
+            address.get().setId(requests.getTargetId());
+            address = this.addressService.update(address.get());
+            apiRespose = ApiResponse.builder()
+                    .message(ApiMessage.SUCCESS)
+                    .error(null)
+                    .data(address)
+                    .build();
+            return ResponseEntity.ok(apiRespose);
+
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            apiRespose = ApiResponse.builder()
+                    .message(ApiMessage.ERROR)
+                    .error(e.getMessage())
+                    .data(null)
+                    .build();
+            return ResponseEntity.internalServerError().body(apiRespose);
+        }
+    }
 }
