@@ -6,7 +6,9 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AddressDto;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Address;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiChangeRequests;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiTargetIdRequest;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.services.AddressService;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.services.AuthorService;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiMessage;
@@ -15,6 +17,7 @@ import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,7 +37,7 @@ public class AuthorAddressController {
     public final ApiValidation apiValidation;
 
     @PostMapping
-    public ResponseEntity<?> addAddress(
+    public ResponseEntity<?> add(
             @RequestBody @Valid ApiChangeRequests<List<AddressDto>> requests,
             Errors errors) {
 
@@ -91,7 +94,7 @@ public class AuthorAddressController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateAddress(@RequestBody @Valid ApiChangeRequests<AddressDto> requests, Errors errors) {
+    public ResponseEntity<?> update(@RequestBody @Valid ApiChangeRequests<AddressDto> requests, Errors errors) {
         ApiResponse<?> apiRespose = null;
 
         if (errors.hasErrors()) {
@@ -139,4 +142,54 @@ public class AuthorAddressController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<?> findAddressByAuthorId(
+            @RequestBody @Valid ApiTargetIdRequest request,
+            Errors errors) {
+
+        ApiResponse<?> apiResponse = null;
+
+        if (errors.hasErrors()) {
+            log.error("Validation error");
+            apiResponse = ApiResponse.builder()
+                    .message(ApiMessage.FAILED)
+                    .error(this.apiValidation.getErrorMessages(errors))
+                    .data(null)
+                    .build();
+            return ResponseEntity.badRequest().body(apiResponse);
+
+        }
+
+        try {
+            log.info("Validation is valid");
+            var author = this.authorService.findById(request.getTargetId());
+
+            if (!author.isPresent()) {
+                apiResponse = ApiResponse.builder()
+                        .message(ApiMessage.FAILED)
+                        .error("Author with id: " + request.getTargetId() + " not found")
+                        .data(null)
+                        .build();
+                return ResponseEntity.badRequest().body(apiResponse);
+
+            }
+
+            var address = author.get().getAddress();
+            apiResponse = ApiResponse.builder()
+                    .message(ApiMessage.SUCCESS)
+                    .error(null)
+                    .data(address)
+                    .build();
+            return ResponseEntity.ok(apiResponse);
+
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            apiResponse = ApiResponse.builder()
+                    .message(ApiMessage.ERROR)
+                    .error(e.getMessage())
+                    .data(null)
+                    .build();
+            return ResponseEntity.internalServerError().body(apiResponse);
+        }
+    }
 }
