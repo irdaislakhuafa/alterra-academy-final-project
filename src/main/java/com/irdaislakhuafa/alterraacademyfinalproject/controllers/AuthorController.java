@@ -1,9 +1,11 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.controllers;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AddressDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AuthorDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Author;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiChangeRequests;
@@ -260,4 +262,62 @@ public class AuthorController {
 
         return responses;
     }
+
+    @PostMapping(value = "path")
+    public ResponseEntity<?> addAddress(
+            @RequestBody @Valid ApiChangeRequests<List<AddressDto>> requests,
+            Errors errors) {
+
+        ApiResponse<?> apiResponse = null;
+
+        log.info("Request add address for author");
+        if (errors.hasErrors()) {
+            log.warn("Validation error");
+            apiResponse = ApiResponse.builder()
+                    .message(ApiMessage.FAILED)
+                    .error(this.apiValidation.getErrorMessages(errors))
+                    .data(null)
+                    .build();
+            return ResponseEntity.badRequest().body(apiResponse);
+
+        } else {
+            log.info("Validation is valid");
+            try {
+                var author = authorService.findById(requests.getTargetId());
+
+                if (!author.isPresent()) {
+                    log.info("Author with id: " + requests.getTargetId() + " not found");
+                    apiResponse = ApiResponse.builder()
+                            .message(ApiMessage.FAILED)
+                            .error("Author with id: " + requests.getTargetId() + " not found")
+                            .data(null)
+                            .build();
+                    return ResponseEntity.badRequest().body(apiResponse);
+                } else {
+                    log.info("Saving all address");
+                    var savedAddress = addressService.saveAll(addressService.mapToEntities(requests.getData()));
+                    author.get().getAddress().addAll(savedAddress);
+
+                    log.info("Updating author address");
+                    author = this.authorService.save(author.get());
+
+                    apiResponse = ApiResponse.builder()
+                            .message(ApiMessage.SUCCESS)
+                            .error(null)
+                            .data(author)
+                            .build();
+                    return ResponseEntity.ok().body(apiResponse);
+                }
+            } catch (Exception e) {
+                log.error("Error: " + e.getMessage());
+                apiResponse = ApiResponse.builder()
+                        .message(ApiMessage.ERROR)
+                        .error(e.getMessage())
+                        .data(null)
+                        .build();
+                return ResponseEntity.internalServerError().body(apiResponse);
+            }
+        }
+    }
+
 }
