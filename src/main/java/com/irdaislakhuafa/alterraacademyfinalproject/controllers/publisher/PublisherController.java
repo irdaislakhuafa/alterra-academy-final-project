@@ -11,6 +11,7 @@ import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,5 +61,31 @@ public class PublisherController {
                     .build();
             return ResponseEntity.internalServerError().body(apiResponse);
         }
+    }
+
+    @GetMapping
+    public ResponseEntity<?> findAll() {
+        log.info("Request find all publishers");
+        ResponseEntity<?> responses = null;
+        ApiResponse<?> apiResponse = null;
+        try {
+            var authors = publisherService.findAll();
+            apiResponse = ApiResponse.builder()
+                    .message(ApiMessage.SUCCESS)
+                    .error(null)
+                    .data(authors)
+                    .build();
+            responses = ResponseEntity.ok(apiResponse);
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            apiResponse = ApiResponse.builder()
+                    .message(ApiMessage.ERROR)
+                    .error(e.getMessage())
+                    .data(null)
+                    .build();
+            responses = ResponseEntity.internalServerError().body(apiResponse);
+        }
+
+        return responses;
     }
 }

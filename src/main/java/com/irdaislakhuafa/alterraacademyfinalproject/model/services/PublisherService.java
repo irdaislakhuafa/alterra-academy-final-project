@@ -78,7 +78,7 @@ public class PublisherService implements BaseService<Publisher, PublisherDto> {
     @Override
     public Publisher mapToEntity(PublisherDto dto) {
         return Publisher.builder()
-                .name(dto.getEmail())
+                .name(dto.getName())
                 .email(dto.getEmail())
                 .address(addressService.mapToEntity(dto.getAddress()))
                 .build();
