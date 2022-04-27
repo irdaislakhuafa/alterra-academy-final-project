@@ -1,4 +1,4 @@
-package com.irdaislakhuafa.alterraacademyfinalproject.model.services;
+package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,7 +9,7 @@ import javax.transaction.Transactional;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.PublisherDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Publisher;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.PublisherRespository;
-import com.irdaislakhuafa.alterraacademyfinalproject.model.services.utils.LogMessage;
+import com.irdaislakhuafa.alterraacademyfinalproject.services.utils.LogMessage;
 
 import org.springframework.stereotype.Service;
 
