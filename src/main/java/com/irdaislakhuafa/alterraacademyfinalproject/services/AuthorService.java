@@ -9,7 +9,7 @@ import javax.transaction.Transactional;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AuthorDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Author;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.AuthorRepository;
-import com.irdaislakhuafa.alterraacademyfinalproject.services.utils.LogMessage;
+import static com.irdaislakhuafa.alterraacademyfinalproject.services.utils.LogMessage.*;
 
 import org.springframework.stereotype.Service;
 
@@ -23,50 +23,50 @@ public class AuthorService implements BaseService<Author, AuthorDto> {
 
     @Override
     public Optional<Author> save(Author entity) {
-        LogMessage.logSave(entity);
+        logSave(entity);
         var savedAuthor = Optional.of(authorRepository.save(entity));
-        LogMessage.logSuccessSave(entity);
+        logSuccessSave(entity);
         return savedAuthor;
     }
 
     @Override
     public Optional<Author> update(Author entity) {
-        LogMessage.logUpdate(entity);
+        logUpdate(entity);
         var updatedAuthor = Optional.of(authorRepository.save(entity));
-        LogMessage.logSuccessUpdate(entity);
+        logSuccessUpdate(entity);
         return updatedAuthor;
     }
 
     @Override
     public Optional<Author> findById(String id) {
-        LogMessage.logPrepareFindById(Author.builder().id(id).build());
+        logPrepareFindById(Author.builder().id(id).build());
         var author = authorRepository.findById(id);
 
         if (!author.isPresent()) {
-            LogMessage.logEntityFound(Author.builder().id(id).build());
+            logEntityFound(Author.builder().id(id).build());
             return Optional.empty();
         }
 
-        LogMessage.logEntityFound(Author.builder().id(id).build());
+        logEntityFound(Author.builder().id(id).build());
         return author;
     }
 
     @Override
     public List<Author> findAll() {
-        LogMessage.logFindAll(new Author());
+        logFindAll(new Author());
         var allAuthor = authorRepository.findAll();
-        LogMessage.logSuccessFindAll(new Author());
+        logSuccessFindAll(new Author());
         return allAuthor;
     }
 
     @Override
     public boolean deleteById(String id) {
         if (!this.existsById(id)) {
-            LogMessage.logEntityNotFound(Author.builder().id(id).build());
+            logEntityNotFound(Author.builder().id(id).build());
             return false;
         }
         authorRepository.deleteById(id);
-        LogMessage.logSuccessDelete(Author.builder().id(id).build());
+        logSuccessDelete(Author.builder().id(id).build());
         return true;
     }
 
@@ -77,13 +77,13 @@ public class AuthorService implements BaseService<Author, AuthorDto> {
 
     @Override
     public Author mapToEntity(AuthorDto dto) {
-        LogMessage.logMapDtoToEntity(new Author());
+        logMapDtoToEntity(new Author());
         var author = Author.builder()
                 .firstName(dto.getFirstName())
                 .lastName(dto.getLastName())
                 .email(dto.getEmail())
                 .build();
-        LogMessage.logSuccessMapDtoToEntity(author);
+        logSuccessMapDtoToEntity(author);
         return author;
     }
 
