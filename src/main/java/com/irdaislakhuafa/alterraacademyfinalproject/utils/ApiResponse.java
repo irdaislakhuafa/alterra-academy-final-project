@@ -2,8 +2,6 @@ package com.irdaislakhuafa.alterraacademyfinalproject.utils;
 
 import java.time.LocalDateTime;
 
-import org.springframework.validation.Errors;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
