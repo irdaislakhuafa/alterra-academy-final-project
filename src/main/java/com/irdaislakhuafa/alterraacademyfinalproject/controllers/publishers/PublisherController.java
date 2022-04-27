@@ -43,10 +43,7 @@ public class PublisherController {
         ApiResponse<?> apiResponse = null;
 
         if (errors.hasErrors()) {
-            apiResponse = ApiResponse.builder()
-                    .message(ApiMessage.FAILED)
-                    .error(this.apiValidation.getErrorMessages(errors))
-                    .build();
+            apiResponse = ApiResponse.validationFailed(this.apiValidation.getErrorMessages(errors));
             return ResponseEntity.badRequest().body(apiResponse);
         }
 
@@ -54,20 +51,13 @@ public class PublisherController {
             var publisher = publisherService.mapToEntity(publisherDto);
             this.addressService.save(publisher.getAddress());
             var savedPublisher = publisherService.save(publisher);
-            apiResponse = ApiResponse.builder()
-                    .message(ApiMessage.SUCCESS)
-                    .error(null)
-                    .data(savedPublisher)
-                    .build();
+            apiResponse = ApiResponse.success(savedPublisher);
+
             return ResponseEntity.ok().body(apiResponse);
 
         } catch (Exception e) {
             log.error("Error: " + e.getMessage());
-            apiResponse = ApiResponse.builder()
-                    .message(ApiMessage.ERROR)
-                    .error(e.getMessage())
-                    .data(null)
-                    .build();
+            apiResponse = ApiResponse.error(e.getMessage());
             return ResponseEntity.internalServerError().body(apiResponse);
         }
     }
@@ -78,20 +68,12 @@ public class PublisherController {
         ResponseEntity<?> responses = null;
         ApiResponse<?> apiResponse = null;
         try {
-            var authors = publisherService.findAll();
-            apiResponse = ApiResponse.builder()
-                    .message(ApiMessage.SUCCESS)
-                    .error(null)
-                    .data(authors)
-                    .build();
+            var publisher = publisherService.findAll();
+            apiResponse = ApiResponse.success(publisher);
             responses = ResponseEntity.ok(apiResponse);
         } catch (Exception e) {
             log.error("Error: " + e.getMessage());
-            apiResponse = ApiResponse.builder()
-                    .message(ApiMessage.ERROR)
-                    .error(e.getMessage())
-                    .data(null)
-                    .build();
+            apiResponse = ApiResponse.error(e.getMessage());
             responses = ResponseEntity.internalServerError().body(apiResponse);
         }
 
@@ -107,22 +89,14 @@ public class PublisherController {
 
         if (errors.hasErrors()) {
             log.error("Error validation");
-            apiResponse = ApiResponse.builder()
-                    .message(ApiMessage.FAILED)
-                    .error(apiValidation.getErrorMessages(errors))
-                    .data(null)
-                    .build();
+            apiResponse = ApiResponse.validationFailed(this.apiValidation.getErrorMessages(errors));
             responses = ResponseEntity.badRequest().body(apiResponse);
 
         } else {
             try {
                 var publisher = publisherService.findById(updateRequest.getTargetId());
                 if (!publisher.isPresent()) {
-                    apiResponse = ApiResponse.builder()
-                            .message(ApiMessage.FAILED)
-                            .error("data with id: " + updateRequest.getTargetId() + " not found")
-                            .data(null)
-                            .build();
+                    apiResponse = ApiResponse.failed("data with id: " + updateRequest.getTargetId() + " not found");
                     responses = ResponseEntity.badRequest().body(apiResponse);
 
                 } else {
@@ -137,21 +111,13 @@ public class PublisherController {
                     publisher.get().setId(updateRequest.getTargetId());
 
                     var updatedPublisher = publisherService.update(publisher.get());
-                    apiResponse = ApiResponse.builder()
-                            .message(ApiMessage.SUCCESS)
-                            .error(null)
-                            .data(updatedPublisher)
-                            .build();
+                    apiResponse = ApiResponse.success(updatedPublisher);
                     responses = ResponseEntity.ok().body(apiResponse);
                 }
             } catch (Exception e) {
                 log.error("Error: " + e.getMessage());
                 e.printStackTrace();
-                apiResponse = ApiResponse.builder()
-                        .message(ApiMessage.ERROR)
-                        .error(e.getMessage())
-                        .data(null)
-                        .build();
+                apiResponse = ApiResponse.error(e.getMessage());
                 responses = ResponseEntity.internalServerError().body(apiResponse);
             }
         }
@@ -169,12 +135,7 @@ public class PublisherController {
 
         log.info("Request delete publisher by id");
         if (errors.hasErrors()) {
-            log.error("Error validation");
-            apiResponse = ApiResponse.builder()
-                    .message(ApiMessage.FAILED)
-                    .error(apiValidation.getErrorMessages(errors))
-                    .data(null)
-                    .build();
+            apiResponse = ApiResponse.validationFailed(apiValidation.getErrorMessages(errors));
             responses = ResponseEntity.badRequest().body(apiResponse);
 
         } else {
@@ -183,31 +144,20 @@ public class PublisherController {
                 var targetDeleted = publisherService.findById(deleteRequests.getTargetId());
                 if (!targetDeleted.isPresent()) {
                     log.debug("Publisher with id: " + deleteRequests.getTargetId() + " not found");
-                    apiResponse = ApiResponse.builder()
-                            .message(ApiMessage.FAILED)
-                            .error("publisher with id: " + deleteRequests.getTargetId() + " not found")
-                            .data(null)
-                            .build();
+                    apiResponse = ApiResponse
+                            .failed("publisher with id: " + deleteRequests.getTargetId() + " not found");
                     responses = ResponseEntity.badRequest().body(apiResponse);
 
                 } else {
                     publisherService.deleteById(deleteRequests.getTargetId());
-                    apiResponse = ApiResponse.builder()
-                            .message(ApiMessage.SUCCESS)
-                            .error(null)
-                            .data(targetDeleted.get())
-                            .build();
+                    apiResponse = ApiResponse.success(targetDeleted);
                     responses = ResponseEntity.ok().body(apiResponse);
                     log.info("Success deleted publisher id: " + targetDeleted.get().getId());
                 }
 
             } catch (Exception e) {
                 log.error("Error: " + e.getMessage());
-                apiResponse = ApiResponse.builder()
-                        .message(ApiMessage.ERROR)
-                        .error(e.getMessage())
-                        .data(null)
-                        .build();
+                apiResponse = ApiResponse.error(e.getMessage());
                 responses = ResponseEntity.internalServerError().body(apiResponse);
             }
         }
@@ -220,12 +170,7 @@ public class PublisherController {
         ApiResponse<?> apiResponse = null;
 
         if (errors.hasErrors()) {
-            log.error("Error validation");
-            apiResponse = ApiResponse.builder()
-                    .message(ApiMessage.FAILED)
-                    .error(apiValidation.getErrorMessages(errors))
-                    .data(null)
-                    .build();
+            apiResponse = ApiResponse.validationFailed(apiValidation.getErrorMessages(errors));
             responses = ResponseEntity.badRequest().body(apiResponse);
 
         } else {
@@ -239,14 +184,11 @@ public class PublisherController {
                         .data((isPresent) ? publisher.get() : null)
                         .error((isPresent) ? null : "publisher with id: " + request.getTargetId() + " not found")
                         .build();
+
                 responses = new ResponseEntity<>(apiResponse, (isPresent) ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
             } catch (Exception e) {
                 log.error("Error: " + e.getMessage());
-                apiResponse = ApiResponse.builder()
-                        .message(ApiMessage.ERROR)
-                        .error(e.getMessage())
-                        .data(null)
-                        .build();
+                apiResponse = ApiResponse.error(e.getMessage());
                 responses = ResponseEntity.internalServerError().body(apiResponse);
             }
         }
