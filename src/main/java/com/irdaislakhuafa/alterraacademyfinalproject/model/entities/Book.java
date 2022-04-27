@@ -54,6 +54,10 @@ public class Book extends BaseEntity {
     @Builder.Default
     private List<Publisher> publishers = new ArrayList<>();
 
+    @ManyToMany
+    @Builder.Default
+    private List<Category> categories = new ArrayList<>();
+
     @PrePersist
     public void onInsert() {
         this.publishedDate = new Date();

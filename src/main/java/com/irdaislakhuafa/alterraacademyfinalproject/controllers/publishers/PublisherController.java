@@ -1,4 +1,4 @@
-package com.irdaislakhuafa.alterraacademyfinalproject.controllers.publisher;
+package com.irdaislakhuafa.alterraacademyfinalproject.controllers.publishers;
 
 import java.util.Optional;
 
