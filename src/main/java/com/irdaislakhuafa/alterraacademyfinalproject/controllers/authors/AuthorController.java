@@ -42,19 +42,11 @@ public class AuthorController {
         ApiResponse<?> apiResponse = null;
         try {
             var authors = authorService.findAll();
-            apiResponse = ApiResponse.builder()
-                    .message(ApiMessage.SUCCESS)
-                    .error(null)
-                    .data(authors)
-                    .build();
+            apiResponse = ApiResponse.success(authors);
             responses = ResponseEntity.ok(apiResponse);
         } catch (Exception e) {
             log.error("Error: " + e.getMessage());
-            apiResponse = ApiResponse.builder()
-                    .message(ApiMessage.ERROR)
-                    .error(e.getMessage())
-                    .data(null)
-                    .build();
+            apiResponse = ApiResponse.error(e.getMessage());
             responses = ResponseEntity.internalServerError().body(apiResponse);
         }
 
@@ -70,29 +62,18 @@ public class AuthorController {
 
         if (errors.hasErrors()) {
             log.error("Error validation");
-            apiResponse = ApiResponse.builder()
-                    .message(ApiMessage.FAILED)
-                    .error(apiValidation.getErrorMessages(errors))
-                    .build();
+            apiResponse = ApiResponse.validationFailed(this.apiValidation.getErrorMessages(errors));
             responses = ResponseEntity.badRequest().body(apiResponse);
 
         } else {
             try {
                 var savedAuthor = authorService.save(authorService.mapToEntity(authorDto));
-                apiResponse = ApiResponse.builder()
-                        .message(ApiMessage.SUCCESS)
-                        .error(null)
-                        .data(savedAuthor)
-                        .build();
+                apiResponse = ApiResponse.success(savedAuthor);
                 responses = ResponseEntity.ok().body(apiResponse);
 
             } catch (Exception e) {
                 log.error("Error: " + e.getMessage());
-                apiResponse = ApiResponse.builder()
-                        .message(ApiMessage.ERROR)
-                        .error(e.getMessage())
-                        .data(null)
-                        .build();
+                apiResponse = ApiResponse.error(e.getMessage());
                 responses = ResponseEntity.internalServerError().body(apiResponse);
             }
         }
@@ -110,22 +91,14 @@ public class AuthorController {
 
         if (errors.hasErrors()) {
             log.error("Error validation");
-            apiResponse = ApiResponse.builder()
-                    .message(ApiMessage.FAILED)
-                    .error(apiValidation.getErrorMessages(errors))
-                    .data(null)
-                    .build();
+            apiResponse = ApiResponse.validationFailed(this.apiValidation.getErrorMessages(errors));
             responses = ResponseEntity.badRequest().body(apiResponse);
 
         } else {
             try {
                 var author = authorService.findById(updateRequest.getTargetId());
                 if (!author.isPresent()) {
-                    apiResponse = ApiResponse.builder()
-                            .message(ApiMessage.FAILED)
-                            .error("data with id: " + updateRequest.getTargetId() + " not found")
-                            .data(null)
-                            .build();
+                    apiResponse = ApiResponse.failed("data with id: " + updateRequest.getTargetId() + " not found");
                     responses = ResponseEntity.badRequest().body(apiResponse);
 
                 } else {
@@ -140,20 +113,12 @@ public class AuthorController {
                                     .build());
 
                     var updatedAuthor = authorService.update(author.get());
-                    apiResponse = ApiResponse.builder()
-                            .message(ApiMessage.SUCCESS)
-                            .error(null)
-                            .data(updatedAuthor)
-                            .build();
+                    apiResponse = ApiResponse.success(updatedAuthor);
                     responses = ResponseEntity.ok().body(apiResponse);
                 }
             } catch (Exception e) {
                 log.error("Error: " + e.getMessage());
-                apiResponse = ApiResponse.builder()
-                        .message(ApiMessage.ERROR)
-                        .error(e.getMessage())
-                        .data(null)
-                        .build();
+                apiResponse = ApiResponse.error(e.getMessage());
                 responses = ResponseEntity.internalServerError().body(apiResponse);
             }
         }
@@ -171,12 +136,7 @@ public class AuthorController {
 
         log.info("Request delete author by id");
         if (errors.hasErrors()) {
-            log.error("Error validation");
-            apiResponse = ApiResponse.builder()
-                    .message(ApiMessage.FAILED)
-                    .error(apiValidation.getErrorMessages(errors))
-                    .data(null)
-                    .build();
+            apiResponse = ApiResponse.validationFailed(this.apiValidation.getErrorMessages(errors));
             responses = ResponseEntity.badRequest().body(apiResponse);
 
         } else {
@@ -185,31 +145,19 @@ public class AuthorController {
                 var targetDeleted = authorService.findById(deleteRequests.getTargetId());
                 if (!targetDeleted.isPresent()) {
                     log.debug("Author with id: " + deleteRequests.getTargetId() + " not found");
-                    apiResponse = ApiResponse.builder()
-                            .message(ApiMessage.FAILED)
-                            .error("author with id: " + deleteRequests.getTargetId() + " not found")
-                            .data(null)
-                            .build();
+                    apiResponse = ApiResponse.failed("author with id: " + deleteRequests.getTargetId() + " not found");
                     responses = ResponseEntity.badRequest().body(apiResponse);
 
                 } else {
                     authorService.deleteById(deleteRequests.getTargetId());
-                    apiResponse = ApiResponse.builder()
-                            .message(ApiMessage.SUCCESS)
-                            .error(null)
-                            .data(targetDeleted.get())
-                            .build();
+                    apiResponse = ApiResponse.success(targetDeleted);
                     responses = ResponseEntity.ok().body(apiResponse);
                     log.info("Success deleted author id: " + targetDeleted.get().getId());
                 }
 
             } catch (Exception e) {
                 log.error("Error: " + e.getMessage());
-                apiResponse = ApiResponse.builder()
-                        .message(ApiMessage.ERROR)
-                        .error(e.getMessage())
-                        .data(null)
-                        .build();
+                apiResponse = ApiResponse.error(e.getMessage());
                 responses = ResponseEntity.internalServerError().body(apiResponse);
             }
         }
@@ -222,12 +170,7 @@ public class AuthorController {
         ApiResponse<?> apiResponse = null;
 
         if (errors.hasErrors()) {
-            log.error("Error validation");
-            apiResponse = ApiResponse.builder()
-                    .message(ApiMessage.FAILED)
-                    .error(apiValidation.getErrorMessages(errors))
-                    .data(null)
-                    .build();
+            apiResponse = ApiResponse.validationFailed(this.apiValidation.getErrorMessages(errors));
             responses = ResponseEntity.badRequest().body(apiResponse);
 
         } else {
@@ -244,11 +187,7 @@ public class AuthorController {
                 responses = new ResponseEntity<>(apiResponse, (isPresent) ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
             } catch (Exception e) {
                 log.error("Error: " + e.getMessage());
-                apiResponse = ApiResponse.builder()
-                        .message(ApiMessage.ERROR)
-                        .error(e.getMessage())
-                        .data(null)
-                        .build();
+                apiResponse = ApiResponse.error(e.getMessage());
                 responses = ResponseEntity.internalServerError().body(apiResponse);
             }
         }
