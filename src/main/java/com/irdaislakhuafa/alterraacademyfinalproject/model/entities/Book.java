@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,4 +35,15 @@ public class Book extends BaseEntity {
 
     @Column
     private LocalDateTime modifiedAt;
+
+    @PrePersist
+    public void onInsert() {
+        this.publishedDate = new Date();
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        this.modifiedAt = LocalDateTime.now();
+    }
 }
