@@ -1,4 +1,4 @@
-package com.irdaislakhuafa.alterraacademyfinalproject.model.services;
+package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
 import java.util.List;
 import java.util.Optional;

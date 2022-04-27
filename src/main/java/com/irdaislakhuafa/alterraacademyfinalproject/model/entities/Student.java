@@ -6,10 +6,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,24 +16,27 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Entity(name = "publishers")
+@Entity(name = "students")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Publisher extends BaseEntity {
+public class Student extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(nullable = false, length = 100, unique = true)
     private String email;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
-    @JoinColumn(name = "address_id")
-    private Address address;
+    @Column(nullable = false)
+    private Byte semester;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @Column(nullable = false)
+    private int batchOfYears;
+
+    @OneToMany(cascade = { CascadeType.ALL })
+    @JoinColumn(name = "address_id")
     @Builder.Default
-    private List<Book> books = new ArrayList<>();
+    private List<Address> addresses = new ArrayList<>();
 }
