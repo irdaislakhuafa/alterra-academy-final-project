@@ -45,7 +45,7 @@ public class Book extends BaseEntity {
     @Column
     private LocalDateTime modifiedAt;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinColumn(nullable = false)
     @Builder.Default
     private List<Author> authors = new ArrayList<>();

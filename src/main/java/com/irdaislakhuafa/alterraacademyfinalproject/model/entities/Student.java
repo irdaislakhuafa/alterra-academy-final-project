@@ -36,7 +36,7 @@ public class Student extends BaseEntity {
     @Column(nullable = false)
     private int batchOfYears;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+    @OneToMany(cascade = { CascadeType.ALL })
     @JoinColumn(name = "address_id")
     @Builder.Default
     private List<Address> addresses = new ArrayList<>();

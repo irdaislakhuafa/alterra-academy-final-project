@@ -32,16 +32,14 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class BooksBorrowing {
-    @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
-    @JoinColumn(name = "book_id")
-    @Column(nullable = false)
+public class BooksBorrowing extends BaseEntity {
+    @ManyToOne(cascade = { CascadeType.ALL }, targetEntity = Book.class)
+    @JoinColumn(name = "book_id", nullable = false)
     @Builder.Default
     private List<Book> books = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "student_id")
-    @Column(nullable = false)
+    @ManyToOne(targetEntity = Student.class)
+    @JoinColumn(name = "student_id", nullable = false)
     @Builder.Default
     private List<Student> students = new ArrayList<>();
 

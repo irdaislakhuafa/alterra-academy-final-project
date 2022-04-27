@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AddressDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.StudentDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Student;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.StudentRepository;
@@ -26,12 +27,15 @@ import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.StudentR
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class StudentService implements BaseService<Student, StudentDto> {
     private final StudentRepository studentRepository;
+    private final AddressService addressService;
 
     @Override
     public Optional<Student> save(Student entity) {
@@ -116,4 +120,11 @@ public class StudentService implements BaseService<Student, StudentDto> {
         return this.studentRepository.saveAll(entities);
     }
 
+    public Optional<Student> addAddress(Optional<Student> targetUpdate, List<AddressDto> addressDtos) {
+        var savedAddresses = this.addressService.saveAll(this.addressService.mapToEntities(addressDtos));
+        targetUpdate.get().getAddresses().addAll(savedAddresses);
+        targetUpdate = this.save(targetUpdate.get());
+        log.info("Success add address for student");
+        return targetUpdate;
+    }
 }

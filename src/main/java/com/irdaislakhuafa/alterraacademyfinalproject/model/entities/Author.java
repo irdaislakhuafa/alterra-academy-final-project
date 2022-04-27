@@ -41,7 +41,7 @@ public class Author extends BaseEntity {
     @Builder.Default
     private List<Address> address = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+    @ManyToMany(cascade = { CascadeType.ALL })
     @Builder.Default
     private List<Book> books = new ArrayList<>();
 }
