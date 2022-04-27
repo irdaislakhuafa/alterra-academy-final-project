@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import lombok.AllArgsConstructor;
@@ -39,4 +40,8 @@ public class Author extends BaseEntity {
     @JoinColumn(name = "address_id")
     @Builder.Default
     private List<Address> address = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+    @Builder.Default
+    private List<Book> books = new ArrayList<>();
 }

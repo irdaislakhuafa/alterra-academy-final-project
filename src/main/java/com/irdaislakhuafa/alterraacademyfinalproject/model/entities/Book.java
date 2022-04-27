@@ -1,14 +1,20 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.model.entities;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,6 +34,9 @@ public class Book extends BaseEntity {
     private String description;
 
     @Column(nullable = false)
+    private boolean isDeleted;
+
+    @Column(nullable = false)
     private Date publishedDate;
 
     @Column(nullable = false)
@@ -36,10 +45,16 @@ public class Book extends BaseEntity {
     @Column
     private LocalDateTime modifiedAt;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false)
+    @Builder.Default
+    private List<Author> authors = new ArrayList<>();
+
     @PrePersist
     public void onInsert() {
         this.publishedDate = new Date();
         this.createdAt = LocalDateTime.now();
+        this.isDeleted = false;
     }
 
     @PreUpdate
