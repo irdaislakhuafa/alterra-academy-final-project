@@ -77,11 +77,14 @@ public class AuthorService implements BaseService<Author, AuthorDto> {
 
     @Override
     public Author mapToEntity(AuthorDto dto) {
-        return Author.builder()
+        LogMessage.logMapDtoToEntity(new Author());
+        var author = Author.builder()
                 .firstName(dto.getFirstName())
                 .lastName(dto.getLastName())
                 .email(dto.getEmail())
                 .build();
+        LogMessage.logSuccessMapDtoToEntity(author);
+        return author;
     }
 
     @Override
