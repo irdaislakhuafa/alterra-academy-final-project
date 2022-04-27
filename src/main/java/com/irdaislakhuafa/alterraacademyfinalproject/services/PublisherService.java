@@ -9,7 +9,7 @@ import javax.transaction.Transactional;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.PublisherDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Publisher;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.PublisherRespository;
-import com.irdaislakhuafa.alterraacademyfinalproject.services.utils.LogMessage;
+import static com.irdaislakhuafa.alterraacademyfinalproject.services.utils.LogMessage.*;
 
 import org.springframework.stereotype.Service;
 
@@ -24,49 +24,49 @@ public class PublisherService implements BaseService<Publisher, PublisherDto> {
 
     @Override
     public Optional<Publisher> save(Publisher entity) {
-        LogMessage.logSave(entity);
+        logSave(entity);
         var savedPublisher = Optional.of(publisherRepository.save(entity));
-        LogMessage.logSuccessSave(entity);
+        logSuccessSave(entity);
         return savedPublisher;
     }
 
     @Override
     public Optional<Publisher> update(Publisher entity) {
-        LogMessage.logUpdate(entity);
+        logUpdate(entity);
         var updatedPublisher = Optional.of(publisherRepository.save(entity));
-        LogMessage.logSuccessUpdate(entity);
+        logSuccessUpdate(entity);
         return updatedPublisher;
     }
 
     @Override
     public Optional<Publisher> findById(String id) {
-        LogMessage.logPrepareFindById(Publisher.builder().id(id).build());
+        logPrepareFindById(Publisher.builder().id(id).build());
         var publisher = publisherRepository.findById(id);
 
         if (!publisher.isPresent()) {
-            LogMessage.logEntityNotFound(Publisher.builder().id(id).build());
+            logEntityNotFound(Publisher.builder().id(id).build());
             return Optional.empty();
         }
-        LogMessage.logEntityFound(Publisher.builder().id(id).build());
+        logEntityFound(Publisher.builder().id(id).build());
         return publisher;
     }
 
     @Override
     public List<Publisher> findAll() {
-        LogMessage.logFindAll(new Publisher());
+        logFindAll(new Publisher());
         var allPublisher = publisherRepository.findAll();
-        LogMessage.logFindAll(new Publisher());
+        logFindAll(new Publisher());
         return allPublisher;
     }
 
     @Override
     public boolean deleteById(String id) {
         if (!this.existsById(id)) {
-            LogMessage.logEntityNotFound(Publisher.builder().id(id).build());
+            logEntityNotFound(Publisher.builder().id(id).build());
             return false;
         }
         publisherRepository.deleteById(id);
-        LogMessage.logSuccessDelete(Publisher.builder().id(id).build());
+        logSuccessDelete(Publisher.builder().id(id).build());
         return true;
     }
 
@@ -77,11 +77,14 @@ public class PublisherService implements BaseService<Publisher, PublisherDto> {
 
     @Override
     public Publisher mapToEntity(PublisherDto dto) {
-        return Publisher.builder()
+        logMapDtoToEntity(new Publisher());
+        var publisher = Publisher.builder()
                 .name(dto.getName())
                 .email(dto.getEmail())
                 .address(addressService.mapToEntity(dto.getAddress()))
                 .build();
+        logSuccessMapDtoToEntity(publisher);
+        return publisher;
     }
 
     @Override
