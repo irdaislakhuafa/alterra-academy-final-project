@@ -61,12 +61,13 @@ public class AuthorAddressController {
                     author.get().getAddress().addAll(savedAddress);
 
                     log.info("Updating author address");
-                    author = this.authorService.save(author.get());
+                    author = this.authorService.update(author.get());
 
                     apiResponse = ApiResponse.success(author);
                     return ResponseEntity.ok().body(apiResponse);
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 log.error("Error: " + e.getMessage());
                 apiResponse = ApiResponse.error(e.getMessage());
                 return ResponseEntity.internalServerError().body(apiResponse);

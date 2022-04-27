@@ -119,7 +119,7 @@ public class StudentAddressController {
         try {
             var targetDelete = this.addressService.findById(request.getTargetId());
             if (!targetDelete.isPresent()) {
-                var message = "student with id: " + request.getTargetId() + " not found";
+                var message = "address with id: " + request.getTargetId() + " not found";
                 log.warn(message);
                 return ResponseEntity.badRequest().body(failed(message));
             }

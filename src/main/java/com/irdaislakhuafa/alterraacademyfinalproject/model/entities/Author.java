@@ -3,11 +3,9 @@ package com.irdaislakhuafa.alterraacademyfinalproject.model.entities;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
@@ -36,12 +34,11 @@ public class Author extends BaseEntity {
     @Column(unique = true, length = 100, nullable = false)
     private String email;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
-    @JoinColumn(name = "address_id")
+    @OneToMany(fetch = FetchType.EAGER)
     @Builder.Default
     private List<Address> address = new ArrayList<>();
 
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @ManyToMany
     @Builder.Default
     private List<Book> books = new ArrayList<>();
 }

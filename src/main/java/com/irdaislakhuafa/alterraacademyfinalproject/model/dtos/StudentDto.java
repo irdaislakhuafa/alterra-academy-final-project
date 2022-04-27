@@ -33,12 +33,8 @@ public class StudentDto {
     private String email;
 
     @NotNull(message = "semester cannot be null")
-    @NotEmpty(message = "semester cannot be empty")
-    @NotBlank(message = "semester cannot be blank")
     private Byte semester;
 
-    @NotNull(message = "batch_of_year cannot be null")
-    @NotEmpty(message = "batch_of_year cannot be empty")
-    @NotBlank(message = "batch_of_year cannot be blank")
+    @NotNull(message = "batch_of_years cannot be null")
     private Integer batchOfYears;
 }
