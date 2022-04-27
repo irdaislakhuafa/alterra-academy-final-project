@@ -1,6 +1,8 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.model.entities;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,6 +19,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.utils.BorrowStatus;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,12 +36,14 @@ public class BooksBorrowing {
     @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
     @JoinColumn(name = "book_id")
     @Column(nullable = false)
-    private Book book;
+    @Builder.Default
+    private List<Book> books = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "student_id")
     @Column(nullable = false)
-    private Student student;
+    @Builder.Default
+    private List<Student> students = new ArrayList<>();
 
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
