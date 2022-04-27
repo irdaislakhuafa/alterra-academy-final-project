@@ -9,8 +9,8 @@ import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.PublisherDtoWith
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Publisher;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiChangeRequests;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiTargetIdRequest;
-import com.irdaislakhuafa.alterraacademyfinalproject.model.services.AddressService;
-import com.irdaislakhuafa.alterraacademyfinalproject.model.services.PublisherService;
+import com.irdaislakhuafa.alterraacademyfinalproject.services.AddressService;
+import com.irdaislakhuafa.alterraacademyfinalproject.services.PublisherService;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiMessage;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiResponse;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
