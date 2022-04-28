@@ -53,4 +53,8 @@ public class LogMessage {
     public static void logSuccessMapDtoToEntity(BaseEntity entity) {
         log.info("Success mapping " + entity.getClass().getSimpleName() + " dto to entity");
     }
+
+    public static void logPrepareFindByName(BaseEntity entity, String name) {
+        log.info(entity.getClass().getSimpleName() + " with name " + name + " not found");
+    }
 }

@@ -101,4 +101,16 @@ public class CategoryService implements BaseService<Category, CategoryDto> {
         return categoryRepository.saveAll(entities);
     }
 
+    public Optional<Category> findByName(String name) {
+        logPrepareFindById(Category.builder().name(name).build());
+        var category = categoryRepository.findByNameEqualsIgnoreCase(name);
+
+        if (!category.isPresent()) {
+            logEntityNotFound(Category.builder().name(name).build());
+            return Optional.empty();
+        }
+        logEntityFound(Category.builder().name(name).build());
+        return category;
+    }
+
 }

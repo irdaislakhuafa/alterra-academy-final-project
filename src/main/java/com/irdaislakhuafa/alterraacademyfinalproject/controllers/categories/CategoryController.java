@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.CategoryDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiChangeRequests;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiRequestName;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiTargetIdRequest;
 import com.irdaislakhuafa.alterraacademyfinalproject.services.CategoryService;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
@@ -26,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping(value = { "/category" })
+@RequestMapping(value = { "/categories" })
 @RequiredArgsConstructor
 public class CategoryController {
     private final ApiValidation apiValidation;
@@ -122,6 +123,29 @@ public class CategoryController {
                     : failed("category with id: " + request.getTargetId() + " not found");
 
             return new ResponseEntity<>(response, (category.isPresent()) ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error(e.getMessage()));
+        }
+    }
+
+    @GetMapping(value = { "/findBy/name" })
+    public ResponseEntity<?> findByName(@RequestBody @Valid ApiRequestName requestName, Errors errors) {
+        if (errors.hasErrors()) {
+            log.error("Validation error");
+            return ResponseEntity.badRequest().body(failed(this.apiValidation.getErrorMessages(errors)));
+        }
+
+        try {
+            log.info("Validation is valid");
+            var category = this.categoryService.findByName(requestName.getName());
+            if (!category.isPresent()) {
+                var message = "category with name: " + requestName.getName() + " not found";
+                log.warn(message);
+                return ResponseEntity.badRequest().body(failed(message));
+            }
+
+            return ResponseEntity.ok(success(category));
         } catch (Exception e) {
             log.error("Error: " + e.getMessage());
             return ResponseEntity.internalServerError().body(error(e.getMessage()));
