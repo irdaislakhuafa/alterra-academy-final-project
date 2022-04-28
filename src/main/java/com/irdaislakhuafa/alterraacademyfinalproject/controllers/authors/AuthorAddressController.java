@@ -78,6 +78,7 @@ public class AuthorAddressController {
     @PutMapping
     public ResponseEntity<?> update(@RequestBody @Valid ApiChangeRequests<AddressDto> requests, Errors errors) {
         ApiResponse<?> apiRespose = null;
+        log.info("Request update address for author");
 
         if (errors.hasErrors()) {
             apiRespose = ApiResponse.validationFailed(this.apiValidation.getErrorMessages(errors));

@@ -1,17 +1,17 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
-import static com.irdaislakhuafa.alterraacademyfinalproject.services.utils.LogMessage.logEntityFound;
-import static com.irdaislakhuafa.alterraacademyfinalproject.services.utils.LogMessage.logEntityNotFound;
-import static com.irdaislakhuafa.alterraacademyfinalproject.services.utils.LogMessage.logFindAll;
-import static com.irdaislakhuafa.alterraacademyfinalproject.services.utils.LogMessage.logMapDtoToEntity;
-import static com.irdaislakhuafa.alterraacademyfinalproject.services.utils.LogMessage.logPrepareFindById;
-import static com.irdaislakhuafa.alterraacademyfinalproject.services.utils.LogMessage.logSave;
-import static com.irdaislakhuafa.alterraacademyfinalproject.services.utils.LogMessage.logSuccessDelete;
-import static com.irdaislakhuafa.alterraacademyfinalproject.services.utils.LogMessage.logSuccessFindAll;
-import static com.irdaislakhuafa.alterraacademyfinalproject.services.utils.LogMessage.logSuccessMapDtoToEntity;
-import static com.irdaislakhuafa.alterraacademyfinalproject.services.utils.LogMessage.logSuccessSave;
-import static com.irdaislakhuafa.alterraacademyfinalproject.services.utils.LogMessage.logSuccessUpdate;
-import static com.irdaislakhuafa.alterraacademyfinalproject.services.utils.LogMessage.logUpdate;
+import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logEntityFound;
+import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logEntityNotFound;
+import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logFindAll;
+import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logMapDtoToEntity;
+import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logPrepareFindById;
+import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logSave;
+import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logSuccessDelete;
+import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logSuccessFindAll;
+import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logSuccessMapDtoToEntity;
+import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logSuccessSave;
+import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logSuccessUpdate;
+import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logUpdate;
 
 import java.util.List;
 import java.util.Optional;

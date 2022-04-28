@@ -116,7 +116,6 @@ public class PublisherController {
                 }
             } catch (Exception e) {
                 log.error("Error: " + e.getMessage());
-                e.printStackTrace();
                 apiResponse = ApiResponse.error(e.getMessage());
                 responses = ResponseEntity.internalServerError().body(apiResponse);
             }
