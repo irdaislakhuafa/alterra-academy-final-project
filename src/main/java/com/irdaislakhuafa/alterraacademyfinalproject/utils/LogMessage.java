@@ -1,4 +1,4 @@
-package com.irdaislakhuafa.alterraacademyfinalproject.services.utils;
+package com.irdaislakhuafa.alterraacademyfinalproject.utils;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.BaseEntity;
 

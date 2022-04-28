@@ -1,10 +1,10 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
+import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.*;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static com.irdaislakhuafa.alterraacademyfinalproject.services.utils.LogMessage.*;
 
 import javax.transaction.Transactional;
 

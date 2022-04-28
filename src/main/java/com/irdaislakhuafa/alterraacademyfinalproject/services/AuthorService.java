@@ -1,5 +1,7 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
+import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.*;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -9,7 +11,6 @@ import javax.transaction.Transactional;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AuthorDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Author;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.AuthorRepository;
-import static com.irdaislakhuafa.alterraacademyfinalproject.services.utils.LogMessage.*;
 
 import org.springframework.stereotype.Service;
 
