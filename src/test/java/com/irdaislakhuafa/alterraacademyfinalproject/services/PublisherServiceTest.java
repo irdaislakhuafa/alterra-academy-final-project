@@ -1,15 +1,25 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.Optional;
+
 import com.irdaislakhuafa.alterraacademyfinalproject.SimpleTestNameGenerator;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Address;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Publisher;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.PublisherRespository;
 
 import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @DisplayNameGeneration(value = SimpleTestNameGenerator.class)
-@SpringBootTest(classes = { PublisherService.class })
+@SpringBootTest
 public class PublisherServiceTest implements BaseServiceTest {
     @MockBean
     private PublisherRespository publisherRespository;
@@ -17,99 +27,120 @@ public class PublisherServiceTest implements BaseServiceTest {
     @Autowired
     private PublisherService publisherService;
 
+    private final Address address = Address.builder()
+            .id("addressId")
+            .city("tuban")
+            .country("indonesia")
+            .build();
+
+    private final Publisher publisher = Publisher.builder()
+            .id("publisherId")
+            .name("irda islakhu afa")
+            .email("irdhaislakhuafa@gmail.com")
+            .address(address)
+            .books(new ArrayList<>())
+            .build();
+
+    @Test
     @Override
     public void testSaveSuccess() {
-        // TODO Auto-generated method stub
-
+        when(this.publisherRespository.save(any())).thenReturn(publisher);
+        var result = this.publisherService.save(publisher);
+        assertNotNull(result);
+        assertTrue(result.isPresent());
     }
 
+    @Test
     @Override
     public void testSaveFailed() {
-        // TODO Auto-generated method stub
-
+        when(this.publisherRespository.save(any())).thenReturn(null);
+        assertThrows(NullPointerException.class, () -> this.publisherService.save(publisher));
     }
 
+    @Test
     @Override
     public void testFindByIdSuccess() {
-        // TODO Auto-generated method stub
-
+        when(this.publisherRespository.findById("publisherId")).thenReturn(Optional.of(publisher));
+        var result = this.publisherService.findById("publisherId");
+        assertNotNull(result);
+        assertTrue(result.isPresent());
     }
 
+    @Test
     @Override
     public void testFindByIdFailed() {
-        // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testDeleteByIdSuccess() {
-        // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testDeleteByIdFailed() {
-        // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testFindAllSuccess() {
-        // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testMapToEntitySuccess() {
-        // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testMapToEntityFailed() {
-        // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testMapToEntitiesSuccess() {
-        // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testMapToEntitiesFailed() {
-        // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testSaveAllSuccess() {
-        // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testSaveAllFailed() {
-        // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testFindAllByIdSuccess() {
-        // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testUpdateSuccess() {
-        // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testUpdateFailed() {
-        // TODO Auto-generated method stub
 
     }
 
