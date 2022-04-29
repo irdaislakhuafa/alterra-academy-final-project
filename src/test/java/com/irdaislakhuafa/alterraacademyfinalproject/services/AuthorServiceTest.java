@@ -1,6 +1,7 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -129,6 +130,20 @@ public class AuthorServiceTest {
         var result = this.authorService.mapToEntities(List.of(authorDto));
         assertNotNull(result);
 
+        assertEquals(author.getEmail(), result.get(0).getEmail());
+    }
+
+    @Test
+    public void testMapToEntitiesFailed() {
+        assertThrows(NullPointerException.class, () -> this.authorService.mapToEntities(List.of(null)));
+    }
+
+    @Test
+    public void testSaveAllSuccess() {
+        when(this.authorRepository.saveAll(anyList())).thenReturn(List.of(author));
+        var result = this.authorService.saveAll(List.of(author));
+
+        assertNotNull(result);
         assertEquals(author.getEmail(), result.get(0).getEmail());
     }
 
