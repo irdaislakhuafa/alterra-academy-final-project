@@ -12,6 +12,7 @@ import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.AddressR
 
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -83,8 +84,15 @@ public class AddressServiceTest {
 
     @Test
     public void deleteByIdSuccess() {
-        when(this.addressRepository.save(address)).thenReturn(address);
-        var result = this.addressService.deleteById(null);
+        when(this.addressRepository.existsById("id")).thenReturn(true);
+        var result = this.addressService.deleteById("id");
+        assertTrue(result);
+    }
+
+    @Test
+    public void testDeleteByIdFailed() {
+        when(this.addressRepository.existsById("id")).thenReturn(false);
+        var result = this.addressService.deleteById("id");
         assertFalse(result);
     }
 
@@ -106,4 +114,11 @@ public class AddressServiceTest {
         assertEquals(this.addressService.findAllById(List.of("id")), new ArrayList<>());
     }
 
+    @Test
+    public void testUpdateSuccess() {
+        when(this.addressRepository.save(address)).thenReturn(address);
+        var result = this.addressService.update(address);
+        assertNotNull(result);
+        assertTrue(result.isPresent());
+    }
 }
