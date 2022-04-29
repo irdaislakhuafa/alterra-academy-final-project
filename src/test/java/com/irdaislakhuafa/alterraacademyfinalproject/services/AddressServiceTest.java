@@ -43,6 +43,10 @@ public class AddressServiceTest {
     @Test
     public void testFindAllSuccess() {
         when(this.addressRepository.findAll()).thenReturn(List.of(address));
+        var result = this.addressService.findAll();
+
+        assertNotNull(result);
+        assertEquals(result, List.of(address));
     }
 
     @Test
@@ -74,11 +78,21 @@ public class AddressServiceTest {
 
     @Test
     public void testFindByIdFailed() {
-        // when(this.addressRepository.findById("id")).thenReturn(any());
-
         var result = this.addressService.findById(null);
         assertNotNull(result);
         assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void deleteByIdSuccess() {
+        when(this.addressRepository.save(address)).thenReturn(address);
+        var result = this.addressService.deleteById(null);
+        assertFalse(result);
+    }
+
+    @Test
+    public void test() {
+
     }
 
 }
