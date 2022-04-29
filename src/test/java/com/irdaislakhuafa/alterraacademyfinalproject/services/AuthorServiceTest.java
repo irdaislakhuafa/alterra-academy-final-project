@@ -119,4 +119,17 @@ public class AuthorServiceTest {
         assertEquals(author.getEmail(), result.getEmail());
     }
 
+    @Test
+    public void testMapToEntityFailed() {
+        assertThrows(NullPointerException.class, () -> this.authorService.mapToEntity(null));
+    }
+
+    @Test
+    public void testMapToEntitiesSuccess() {
+        var result = this.authorService.mapToEntities(List.of(authorDto));
+        assertNotNull(result);
+
+        assertEquals(author.getEmail(), result.get(0).getEmail());
+    }
+
 }
