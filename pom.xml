@@ -86,9 +86,13 @@
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.8</version>
 				<configuration>
-					<excludes>**/utils/**</excludes>
-					<excludes>**/configuration/**</excludes>
-					<excludes>**/model/**</excludes>
+					<excludes>
+						<exclude>**/utils/**</exclude>
+						<exclude>**/configuration/**</exclude>
+						<exclude>**/model/**</exclude>
+						<exclude>**/alterraacademyfinalproject/*.class</exclude>
+						<exclude>**/alterraacademyfinalproject/controllers/InitController.class</exclude>
+					</excludes>
 				</configuration>
 
 				<executions>
