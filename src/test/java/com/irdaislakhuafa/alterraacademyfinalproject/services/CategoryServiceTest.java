@@ -81,7 +81,10 @@ public class CategoryServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testDeleteByIdFailed() {
+        when(this.categoryRepository.existsById("id")).thenReturn(false);
+        var result = this.categoryService.deleteById("id");
 
+        assertTrue(result);
     }
 
     @Test
