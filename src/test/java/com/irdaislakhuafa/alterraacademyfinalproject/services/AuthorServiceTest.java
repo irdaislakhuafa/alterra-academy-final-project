@@ -88,4 +88,11 @@ public class AuthorServiceTest {
         assertTrue(result);
     }
 
+    @Test
+    public void testDeleteByIdFailed() {
+        when(this.authorRepository.existsById("id")).thenReturn(false);
+        var result = this.authorService.deleteById("id");
+        assertFalse(result);
+    }
+
 }
