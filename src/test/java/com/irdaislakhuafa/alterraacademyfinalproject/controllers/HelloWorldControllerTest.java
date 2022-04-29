@@ -1,20 +1,20 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.controllers;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.web.client.RestTemplate;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(value = { SpringExtension.class, MockitoExtension.class })
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.test.web.servlet.MockMvc;
+
+@WebMvcTest(controllers = HelloWorldController.class)
 public class HelloWorldControllerTest {
-    @MockBean
-    public RestTemplate restTemplate;
+    @Autowired
+    private MockMvc mockMvc;
 
     @Test
-    public void testHelloWorld() {
-        Assertions.assertNotNull(restTemplate);
+    public void testHelloWorld() throws Exception {
+        mockMvc.perform(get("/hello-world")).andExpect(status().isOk());
     }
 }
