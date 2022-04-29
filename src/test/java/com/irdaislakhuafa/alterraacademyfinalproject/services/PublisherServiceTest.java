@@ -4,8 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.*;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.SimpleTestNameGenerator;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Address;
@@ -78,23 +77,26 @@ public class PublisherServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testDeleteByIdSuccess() {
-        when(this.publisherRespository.findById("publisherId")).thenReturn(Optional.empty());
-        var result = this.publisherService.findById("publisherId");
-        assertNotNull(result);
-        assertFalse(result.isPresent());
-
+        when(this.publisherRespository.existsById("publisherId")).thenReturn(true);
+        var result = this.publisherService.deleteById("publisherId");
+        assertTrue(result);
     }
 
     @Test
     @Override
     public void testDeleteByIdFailed() {
-
+        when(this.publisherRespository.existsById("publisherId")).thenReturn(false);
+        var result = this.publisherService.deleteById("publisherId");
+        assertFalse(result);
     }
 
     @Test
     @Override
     public void testFindAllSuccess() {
-
+        when(this.publisherRespository.findAll()).thenReturn(List.of(publisher));
+        var result = this.publisherService.findAll();
+        assertNotNull(result);
+        assertEquals(List.of(publisher), result);
     }
 
     @Test
