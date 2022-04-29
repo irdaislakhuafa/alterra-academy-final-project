@@ -66,8 +66,8 @@ public class AddressServiceTest {
 
     @Test
     public void testFindByIdSuccess() {
-        when(this.addressRepository.save(address)).thenReturn(address);
-        when(this.addressRepository.findById(anyString())).thenReturn(Optional.of(address));
+        when(this.addressRepository.findById(anyString()))
+                .thenReturn(Optional.of(address));
 
         var addressTemp = this.addressService.findById("id");
 
@@ -111,7 +111,11 @@ public class AddressServiceTest {
 
     @Test
     public void testFindAllByIdSuccess() {
-        assertEquals(this.addressService.findAllById(List.of("id")), new ArrayList<>());
+        when(this.addressRepository.findAllById(anyList()))
+                .thenReturn(List.of(address));
+
+        var result = this.addressService.findAllById(List.of("id"));
+        assertEquals(List.of(address), result);
     }
 
     @Test
