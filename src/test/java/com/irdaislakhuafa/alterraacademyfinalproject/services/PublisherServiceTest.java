@@ -2,6 +2,7 @@ package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 
 import java.util.*;
@@ -128,19 +129,28 @@ public class PublisherServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testMapToEntitiesSuccess() {
-
+        assertEquals(List.of(publisher)
+                .get(0)
+                .getEmail(),
+                this.publisherService
+                        .mapToEntities(List.of(publisherDto))
+                        .get(0)
+                        .getEmail());
     }
 
     @Test
     @Override
     public void testMapToEntitiesFailed() {
-
+        assertThrows(NullPointerException.class, () -> this.publisherService.mapToEntities(null));
     }
 
     @Test
     @Override
     public void testSaveAllSuccess() {
-
+        when(this.publisherRespository.saveAll(anyList())).thenReturn(List.of(publisher));
+        var result = this.publisherService.saveAll(List.of(publisher));
+        assertNotNull(result);
+        assertEquals(List.of(publisher), result);
     }
 
     @Test
@@ -152,13 +162,19 @@ public class PublisherServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testFindAllByIdSuccess() {
-
+        when(this.publisherRespository.findAllById(List.of("id"))).thenReturn(List.of(publisher));
+        var result = this.publisherService.findAllById(List.of("id"));
+        assertNotNull(result);
+        assertEquals(List.of(publisher), result);
     }
 
     @Test
     @Override
     public void testUpdateSuccess() {
-
+        when(this.publisherRespository.save(any())).thenReturn(publisher);
+        var result = this.publisherService.update(publisher);
+        assertNotNull(result);
+        assertEquals(publisher, result.get());
     }
 
     @Test
