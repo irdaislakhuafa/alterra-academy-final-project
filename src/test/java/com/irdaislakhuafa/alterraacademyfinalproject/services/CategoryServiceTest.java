@@ -84,7 +84,7 @@ public class CategoryServiceTest implements BaseServiceTest {
         when(this.categoryRepository.existsById("id")).thenReturn(false);
         var result = this.categoryService.deleteById("id");
 
-        assertTrue(result);
+        assertFalse(result);
     }
 
     @Test
