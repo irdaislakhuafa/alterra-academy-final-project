@@ -8,9 +8,8 @@ import javax.validation.Valid;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AddressDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiChangeRequests;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiTargetIdRequest;
-import com.irdaislakhuafa.alterraacademyfinalproject.model.services.AddressService;
-import com.irdaislakhuafa.alterraacademyfinalproject.model.services.AuthorService;
-import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiMessage;
+import com.irdaislakhuafa.alterraacademyfinalproject.services.AddressService;
+import com.irdaislakhuafa.alterraacademyfinalproject.services.AuthorService;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiResponse;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
 
@@ -45,14 +44,8 @@ public class AuthorAddressController {
 
         log.info("Request add address for author");
         if (errors.hasErrors()) {
-            log.warn("Validation error");
-            apiResponse = ApiResponse.builder()
-                    .message(ApiMessage.FAILED)
-                    .error(this.apiValidation.getErrorMessages(errors))
-                    .data(null)
-                    .build();
+            apiResponse = ApiResponse.validationFailed(this.apiValidation.getErrorMessages(errors));
             return ResponseEntity.badRequest().body(apiResponse);
-
         } else {
             log.info("Validation is valid");
             try {
@@ -60,11 +53,7 @@ public class AuthorAddressController {
 
                 if (!author.isPresent()) {
                     log.info("Author with id: " + requests.getTargetId() + " not found");
-                    apiResponse = ApiResponse.builder()
-                            .message(ApiMessage.FAILED)
-                            .error("Author with id: " + requests.getTargetId() + " not found")
-                            .data(null)
-                            .build();
+                    apiResponse = ApiResponse.failed("Author with id: " + requests.getTargetId() + " not found");
                     return ResponseEntity.badRequest().body(apiResponse);
                 } else {
                     log.info("Saving all address");
@@ -72,22 +61,15 @@ public class AuthorAddressController {
                     author.get().getAddress().addAll(savedAddress);
 
                     log.info("Updating author address");
-                    author = this.authorService.save(author.get());
+                    author = this.authorService.update(author.get());
 
-                    apiResponse = ApiResponse.builder()
-                            .message(ApiMessage.SUCCESS)
-                            .error(null)
-                            .data(author)
-                            .build();
+                    apiResponse = ApiResponse.success(author);
                     return ResponseEntity.ok().body(apiResponse);
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 log.error("Error: " + e.getMessage());
-                apiResponse = ApiResponse.builder()
-                        .message(ApiMessage.ERROR)
-                        .error(e.getMessage())
-                        .data(null)
-                        .build();
+                apiResponse = ApiResponse.error(e.getMessage());
                 return ResponseEntity.internalServerError().body(apiResponse);
             }
         }
@@ -96,16 +78,11 @@ public class AuthorAddressController {
     @PutMapping
     public ResponseEntity<?> update(@RequestBody @Valid ApiChangeRequests<AddressDto> requests, Errors errors) {
         ApiResponse<?> apiRespose = null;
+        log.info("Request update address for author");
 
         if (errors.hasErrors()) {
-            log.info("Validation error");
-            apiRespose = ApiResponse.builder()
-                    .message(ApiMessage.FAILED)
-                    .error(this.apiValidation.getErrorMessages(errors))
-                    .data(null)
-                    .build();
+            apiRespose = ApiResponse.validationFailed(this.apiValidation.getErrorMessages(errors));
             return ResponseEntity.badRequest().body(apiRespose);
-
         }
 
         try {
@@ -113,31 +90,20 @@ public class AuthorAddressController {
             var address = this.addressService.findById(requests.getTargetId());
             if (!address.isPresent()) {
                 log.info("Address with id: " + requests.getTargetId() + " not found");
-                apiRespose = ApiResponse.builder()
-                        .message(ApiMessage.FAILED)
-                        .error("Address with id: " + requests.getTargetId() + " not found")
-                        .data(null)
-                        .build();
+                apiRespose = ApiResponse.failed("Address with id: " + requests.getTargetId() + " not found");
                 return ResponseEntity.badRequest().body(apiRespose);
             }
 
             address = Optional.of(this.addressService.mapToEntity(requests.getData()));
             address.get().setId(requests.getTargetId());
             address = this.addressService.update(address.get());
-            apiRespose = ApiResponse.builder()
-                    .message(ApiMessage.SUCCESS)
-                    .error(null)
-                    .data(address)
-                    .build();
+            apiRespose = ApiResponse.success(address);
+
             return ResponseEntity.ok(apiRespose);
 
         } catch (Exception e) {
             log.error("Error: " + e.getMessage());
-            apiRespose = ApiResponse.builder()
-                    .message(ApiMessage.ERROR)
-                    .error(e.getMessage())
-                    .data(null)
-                    .build();
+            apiRespose = ApiResponse.error(e.getMessage());
             return ResponseEntity.internalServerError().body(apiRespose);
         }
     }
@@ -150,14 +116,8 @@ public class AuthorAddressController {
         ApiResponse<?> apiResponse = null;
 
         if (errors.hasErrors()) {
-            log.error("Validation error");
-            apiResponse = ApiResponse.builder()
-                    .message(ApiMessage.FAILED)
-                    .error(this.apiValidation.getErrorMessages(errors))
-                    .data(null)
-                    .build();
+            apiResponse = ApiResponse.validationFailed(this.apiValidation.getErrorMessages(errors));
             return ResponseEntity.badRequest().body(apiResponse);
-
         }
 
         try {
@@ -165,30 +125,17 @@ public class AuthorAddressController {
             var author = this.authorService.findById(request.getTargetId());
 
             if (!author.isPresent()) {
-                apiResponse = ApiResponse.builder()
-                        .message(ApiMessage.FAILED)
-                        .error("Author with id: " + request.getTargetId() + " not found")
-                        .data(null)
-                        .build();
+                apiResponse = ApiResponse.failed("Author with id: " + request.getTargetId() + " not found");
                 return ResponseEntity.badRequest().body(apiResponse);
-
             }
 
             var address = author.get().getAddress();
-            apiResponse = ApiResponse.builder()
-                    .message(ApiMessage.SUCCESS)
-                    .error(null)
-                    .data(address)
-                    .build();
+            apiResponse = ApiResponse.success(address);
             return ResponseEntity.ok(apiResponse);
 
         } catch (Exception e) {
             log.error("Error: " + e.getMessage());
-            apiResponse = ApiResponse.builder()
-                    .message(ApiMessage.ERROR)
-                    .error(e.getMessage())
-                    .data(null)
-                    .build();
+            apiResponse = ApiResponse.error(e.getMessage());
             return ResponseEntity.internalServerError().body(apiResponse);
         }
     }
@@ -198,12 +145,7 @@ public class AuthorAddressController {
         ApiResponse<?> apiResponse = null;
 
         if (errors.hasErrors()) {
-            log.warn("Validation error");
-            apiResponse = ApiResponse.builder()
-                    .message(ApiMessage.FAILED)
-                    .error(this.apiValidation.getErrorMessages(errors))
-                    .data(null)
-                    .build();
+            apiResponse = ApiResponse.validationFailed(this.apiValidation.getErrorMessages(errors));
             return ResponseEntity.badRequest().body(apiResponse);
         }
 
@@ -213,28 +155,16 @@ public class AuthorAddressController {
 
             if (targetDeleted.isPresent()) {
                 this.addressService.deleteById(request.getTargetId());
-                apiResponse = ApiResponse.builder()
-                        .message(ApiMessage.SUCCESS)
-                        .data(targetDeleted)
-                        .error(null)
-                        .build();
+                apiResponse = ApiResponse.success(targetDeleted);
                 return ResponseEntity.ok().body(apiResponse);
             }
 
-            apiResponse = ApiResponse.builder()
-                    .message(ApiMessage.FAILED)
-                    .error("Address with id: " + request.getTargetId() + " not found")
-                    .data(null)
-                    .build();
+            apiResponse = ApiResponse.failed("Address with id: " + request.getTargetId() + " not found");
             return ResponseEntity.badRequest().body(apiResponse);
 
         } catch (Exception e) {
             log.error("Error: " + e.getMessage());
-            apiResponse = ApiResponse.builder()
-                    .message(ApiMessage.ERROR)
-                    .error(e.getMessage())
-                    .data(null)
-                    .build();
+            apiResponse = ApiResponse.error(e.getMessage());
             return ResponseEntity.internalServerError().body(apiResponse);
         }
     }

@@ -1,4 +1,6 @@
-package com.irdaislakhuafa.alterraacademyfinalproject.model.services;
+package com.irdaislakhuafa.alterraacademyfinalproject.services;
+
+import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,7 +11,6 @@ import javax.transaction.Transactional;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AddressDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Address;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.AddressRepository;
-import com.irdaislakhuafa.alterraacademyfinalproject.model.services.utils.LogMessage;
 
 import org.springframework.stereotype.Service;
 
@@ -23,49 +24,49 @@ public class AddressService implements BaseService<Address, AddressDto> {
 
     @Override
     public Optional<Address> save(Address entity) {
-        LogMessage.logSave(entity);
+        logSave(entity);
         var savedAddress = Optional.of(addressRepository.save(entity));
-        LogMessage.logSuccessSave(entity);
+        logSuccessSave(entity);
         return savedAddress;
     }
 
     @Override
     public Optional<Address> update(Address entity) {
-        LogMessage.logUpdate(entity);
+        logUpdate(entity);
         var updatedAddress = Optional.of(addressRepository.save(entity));
-        LogMessage.logSuccessUpdate(entity);
+        logSuccessUpdate(entity);
         return updatedAddress;
     }
 
     @Override
     public Optional<Address> findById(String id) {
-        LogMessage.logPrepareFindById(Address.builder().id(id).build());
+        logPrepareFindById(Address.builder().id(id).build());
         var address = addressRepository.findById(id);
 
         if (!address.isPresent()) {
-            LogMessage.logEntityNotFound(Address.builder().id(id).build());
+            logEntityNotFound(Address.builder().id(id).build());
             return Optional.empty();
         }
-        LogMessage.logEntityFound(Address.builder().id(id).build());
+        logEntityFound(Address.builder().id(id).build());
         return address;
     }
 
     @Override
     public List<Address> findAll() {
-        LogMessage.logFindAll(new Address());
+        logFindAll(new Address());
         var allAddress = addressRepository.findAll();
-        LogMessage.logFindAll(new Address());
+        logFindAll(new Address());
         return allAddress;
     }
 
     @Override
     public boolean deleteById(String id) {
         if (!this.existsById(id)) {
-            LogMessage.logEntityNotFound(Address.builder().id(id).build());
+            logEntityNotFound(Address.builder().id(id).build());
             return false;
         }
         addressRepository.deleteById(id);
-        LogMessage.logSuccessDelete(Address.builder().id(id).build());
+        logSuccessDelete(Address.builder().id(id).build());
         return true;
     }
 
@@ -76,12 +77,12 @@ public class AddressService implements BaseService<Address, AddressDto> {
 
     @Override
     public Address mapToEntity(AddressDto dto) {
-        LogMessage.logMapDtoToEntity(new Address());
+        logMapDtoToEntity(new Address());
         var address = Address.builder()
                 .city(dto.getCity())
                 .country(dto.getCountry())
                 .build();
-        LogMessage.logSuccessMapDtoToEntity(address);
+        logSuccessMapDtoToEntity(address);
         return address;
     }
 
