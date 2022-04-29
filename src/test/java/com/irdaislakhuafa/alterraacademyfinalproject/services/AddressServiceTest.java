@@ -4,8 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.SimpleTestNameGenerator;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Address;
@@ -90,10 +89,21 @@ public class AddressServiceTest {
     }
 
     @Test
-    public void testSaveAll() {
+    public void testSaveAllSuccess() {
         when(this.addressRepository.saveAll(anyList())).thenReturn(List.of(address));
         var result = this.addressService.saveAll(List.of(address));
         assertNotNull(result);
+    }
+
+    @Test
+    public void testSaveAllFailed() {
+        when(this.addressRepository.saveAll(null)).thenThrow(NullPointerException.class);
+        assertThrows(NullPointerException.class, () -> this.addressService.saveAll(null));
+    }
+
+    @Test
+    public void testFindAllByIdSuccess() {
+        assertEquals(this.addressService.findAllById(List.of("id")), new ArrayList<>());
     }
 
 }
