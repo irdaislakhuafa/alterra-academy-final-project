@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.SimpleTestNameGenerator;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AuthorDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.*;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.AuthorRepository;
 
@@ -51,6 +52,12 @@ public class AuthorServiceTest {
             .email("irdhaislakhuafa@gmail.com")
             .address(List.of(address))
             .books(List.of(book))
+            .build();
+
+    private final AuthorDto authorDto = AuthorDto.builder()
+            .firstName("irda")
+            .lastName("islakhu afa")
+            .email("irdhaislakhuafa@gmail.com")
             .build();
 
     @Test
@@ -102,6 +109,14 @@ public class AuthorServiceTest {
         assertNotNull(result);
 
         assertEquals(author.getEmail(), result.get(0).getEmail());
+    }
+
+    @Test
+    public void testMapToEntitySuccess() {
+        var result = this.authorService.mapToEntity(authorDto);
+        assertNotNull(result);
+
+        assertEquals(author.getEmail(), result.getEmail());
     }
 
 }
