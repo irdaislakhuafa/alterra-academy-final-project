@@ -69,12 +69,19 @@ public class PublisherServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testFindByIdFailed() {
-
+        when(this.publisherRespository.findById("publisherId")).thenReturn(Optional.empty());
+        var result = this.publisherService.findById("publisherId");
+        assertNotNull(result);
+        assertFalse(result.isPresent());
     }
 
     @Test
     @Override
     public void testDeleteByIdSuccess() {
+        when(this.publisherRespository.findById("publisherId")).thenReturn(Optional.empty());
+        var result = this.publisherService.findById("publisherId");
+        assertNotNull(result);
+        assertFalse(result.isPresent());
 
     }
 
