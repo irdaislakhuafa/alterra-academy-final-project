@@ -2,6 +2,7 @@ package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 
 import java.util.*;
@@ -114,25 +115,32 @@ public class CategoryServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testMapToEntityFailed() {
-
+        assertThrows(NullPointerException.class, () -> this.categoryService.mapToEntity(null));
     }
 
     @Test
     @Override
     public void testMapToEntitiesSuccess() {
-
+        var result = this.categoryService.mapToEntities(List.of(categoryDto));
+        assertNotNull(result);
+        assertEquals(category.getClass(), result.get(0).getClass());
+        assertEquals(category.getName(), result.get(0).getName());
+        assertEquals(category.getDescription(), result.get(0).getDescription());
     }
 
     @Test
     @Override
     public void testMapToEntitiesFailed() {
-
+        assertThrows(NullPointerException.class, () -> this.categoryService.mapToEntities(null));
     }
 
     @Test
     @Override
     public void testSaveAllSuccess() {
-
+        when(this.categoryRepository.saveAll(anyList())).thenReturn(List.of(category));
+        var result = this.categoryService.saveAll(List.of(category));
+        assertNotNull(result);
+        assertEquals(List.of(category), result);
     }
 
     @Test
