@@ -10,11 +10,107 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @DisplayNameGeneration(value = SimpleTestNameGenerator.class)
 @SpringBootTest(classes = { PublisherService.class })
-public class PublisherServiceTest {
+public class PublisherServiceTest implements BaseServiceTest {
     @MockBean
     private PublisherRespository publisherRespository;
 
     @Autowired
     private PublisherService publisherService;
+
+    @Override
+    public void testSaveSuccess() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testSaveFailed() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testFindByIdSuccess() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testFindByIdFailed() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testDeleteByIdSuccess() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testDeleteByIdFailed() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testFindAllSuccess() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testMapToEntitySuccess() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testMapToEntityFailed() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testMapToEntitiesSuccess() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testMapToEntitiesFailed() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testSaveAllSuccess() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testSaveAllFailed() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testFindAllByIdSuccess() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testUpdateSuccess() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testUpdateFailed() {
+        // TODO Auto-generated method stub
+
+    }
 
 }
