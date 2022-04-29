@@ -95,4 +95,13 @@ public class AuthorServiceTest {
         assertFalse(result);
     }
 
+    @Test
+    public void testFindAllSuccess() {
+        when(this.authorRepository.findAll()).thenReturn(List.of(author));
+        var result = this.authorService.findAll();
+        assertNotNull(result);
+
+        assertEquals(author.getEmail(), result.get(0).getEmail());
+    }
+
 }
