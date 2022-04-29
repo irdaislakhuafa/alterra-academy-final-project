@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.util.*;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.SimpleTestNameGenerator;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AddressDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Address;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.AddressRepository;
 
@@ -30,7 +31,12 @@ public class AddressServiceTest {
 
     private final Address address = Address.builder()
             .id("id")
-            .city("Tuban")
+            .city("tuban")
+            .country("indonesia")
+            .build();
+
+    private final AddressDto addressDto = AddressDto.builder()
+            .city("tuban")
             .country("indonesia")
             .build();
 
@@ -136,6 +142,22 @@ public class AddressServiceTest {
 
     @Test
     public void testMapToEntitySuccess() {
+        assertNotNull(addressDto);
+        assertNotNull(address);
 
+        var mappedAddress = this.addressService.mapToEntity(addressDto);
+
+        assertEquals(address.getCity(), mappedAddress.getCity());
+        assertEquals(address.getCountry(), mappedAddress.getCountry());
+        assertEquals(address.getClass(), mappedAddress.getClass());
+    }
+
+    @Test
+    public void testMapToEntitiesSuccess() {
+        var mappedAddresses = this.addressService.mapToEntities(List.of(addressDto));
+
+        assertNotNull(mappedAddresses);
+
+        mappedAddresses.forEach((value) -> assertEquals(value.getCity(), addressDto.getCity()));
     }
 }
