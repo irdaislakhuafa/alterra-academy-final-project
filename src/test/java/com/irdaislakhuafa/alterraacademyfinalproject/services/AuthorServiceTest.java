@@ -147,4 +147,11 @@ public class AuthorServiceTest {
         assertEquals(author.getEmail(), result.get(0).getEmail());
     }
 
+    @Test
+    public void testFindAllByIdSuccess() {
+        when(this.authorRepository.findAllById(anyList())).thenReturn(List.of(author));
+        var result = this.authorService.findAllById(List.of("id"));
+        assertNotNull(result);
+    }
+
 }
