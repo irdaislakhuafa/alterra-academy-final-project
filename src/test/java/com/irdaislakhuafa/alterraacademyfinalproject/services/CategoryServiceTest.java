@@ -175,4 +175,14 @@ public class CategoryServiceTest implements BaseServiceTest {
         when(this.categoryRepository.save(any())).thenThrow(NullPointerException.class);
         assertThrows(NullPointerException.class, () -> this.categoryService.update(category));
     }
+
+    @Test
+    public void testFindByName() {
+        when(this.categoryRepository.findByNameEqualsIgnoreCase("name")).thenReturn(Optional.of(category));
+        var result = this.categoryService.findByName("testWrongName");
+        assertEquals(Optional.empty(), result);
+
+        result = this.categoryService.findByName("name");
+        assertTrue(result.isPresent());
+    }
 }
