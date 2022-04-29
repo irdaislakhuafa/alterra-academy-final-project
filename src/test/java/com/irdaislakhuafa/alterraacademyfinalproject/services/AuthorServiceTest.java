@@ -21,7 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @DisplayNameGeneration(value = SimpleTestNameGenerator.class)
 @SpringBootTest(classes = { AuthorService.class })
-public class AuthorServiceTest {
+public class AuthorServiceTest implements BaseServiceTest {
     @MockBean
     private AuthorRepository authorRepository;
 
@@ -63,6 +63,7 @@ public class AuthorServiceTest {
             .build();
 
     @Test
+    @Override
     public void testSaveSuccess() {
         when(this.authorRepository.save(author)).thenReturn(author);
 
@@ -73,6 +74,7 @@ public class AuthorServiceTest {
     }
 
     @Test
+    @Override
     public void testFindByIdSuccess() {
         when(this.authorRepository.findById("id")).thenReturn(Optional.of(author));
         var result = this.authorService.findById("id");
@@ -82,6 +84,7 @@ public class AuthorServiceTest {
     }
 
     @Test
+    @Override
     public void testFindByIdFailed() {
         when(this.authorRepository.findById("id")).thenReturn(Optional.empty());
         var result = this.authorService.findById("id");
@@ -91,6 +94,7 @@ public class AuthorServiceTest {
     }
 
     @Test
+    @Override
     public void testDeleteByIdSuccess() {
         when(this.authorRepository.existsById("id")).thenReturn(true);
         var result = this.authorService.deleteById("id");
@@ -98,6 +102,7 @@ public class AuthorServiceTest {
     }
 
     @Test
+    @Override
     public void testDeleteByIdFailed() {
         when(this.authorRepository.existsById("id")).thenReturn(false);
         var result = this.authorService.deleteById("id");
@@ -105,6 +110,7 @@ public class AuthorServiceTest {
     }
 
     @Test
+    @Override
     public void testFindAllSuccess() {
         when(this.authorRepository.findAll()).thenReturn(List.of(author));
         var result = this.authorService.findAll();
@@ -114,6 +120,7 @@ public class AuthorServiceTest {
     }
 
     @Test
+    @Override
     public void testMapToEntitySuccess() {
         var result = this.authorService.mapToEntity(authorDto);
         assertNotNull(result);
@@ -122,11 +129,13 @@ public class AuthorServiceTest {
     }
 
     @Test
+    @Override
     public void testMapToEntityFailed() {
         assertThrows(NullPointerException.class, () -> this.authorService.mapToEntity(null));
     }
 
     @Test
+    @Override
     public void testMapToEntitiesSuccess() {
         var result = this.authorService.mapToEntities(List.of(authorDto));
         assertNotNull(result);
@@ -135,11 +144,13 @@ public class AuthorServiceTest {
     }
 
     @Test
+    @Override
     public void testMapToEntitiesFailed() {
         assertThrows(NullPointerException.class, () -> this.authorService.mapToEntities(null));
     }
 
     @Test
+    @Override
     public void testSaveAllSuccess() {
         when(this.authorRepository.saveAll(anyList())).thenReturn(List.of(author));
         var result = this.authorService.saveAll(List.of(author));
@@ -149,6 +160,7 @@ public class AuthorServiceTest {
     }
 
     @Test
+    @Override
     public void testFindAllByIdSuccess() {
         when(this.authorRepository.findAllById(anyList())).thenReturn(List.of(author));
         var result = this.authorService.findAllById(List.of("id"));
@@ -156,6 +168,7 @@ public class AuthorServiceTest {
     }
 
     @Test
+    @Override
     public void testUpdateSuccess() {
         when(this.authorRepository.save(any(Author.class))).thenReturn(author);
         var result = this.authorService.update(author);
