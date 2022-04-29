@@ -1,8 +1,7 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -91,8 +90,10 @@ public class AddressServiceTest {
     }
 
     @Test
-    public void test() {
-
+    public void testSaveAll() {
+        when(this.addressRepository.saveAll(anyList())).thenReturn(List.of(address));
+        var result = this.addressService.saveAll(List.of(address));
+        assertNotNull(result);
     }
 
 }
