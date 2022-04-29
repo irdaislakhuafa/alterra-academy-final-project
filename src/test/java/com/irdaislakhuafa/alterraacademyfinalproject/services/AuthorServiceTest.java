@@ -136,7 +136,7 @@ public class AuthorServiceTest {
 
     @Test
     public void testMapToEntitiesFailed() {
-        assertThrows(NullPointerException.class, () -> this.authorService.mapToEntities(List.of(null)));
+        assertThrows(NullPointerException.class, () -> this.authorService.mapToEntities(null));
     }
 
     @Test
