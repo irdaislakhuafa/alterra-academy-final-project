@@ -146,24 +146,33 @@ public class CategoryServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testSaveAllFailed() {
-
+        when(this.categoryRepository.saveAll(anyList())).thenReturn(null);
+        var result = this.categoryService.saveAll(List.of(category));
+        assertNull(result);
     }
 
     @Test
     @Override
     public void testFindAllByIdSuccess() {
-
+        when(this.categoryRepository.findAllById(List.of("id"))).thenReturn(List.of(category));
+        var result = this.categoryService.findAllById(List.of("id"));
+        assertNotNull(result);
+        assertEquals(List.of(category), result);
     }
 
     @Test
     @Override
     public void testUpdateSuccess() {
-
+        when(this.categoryRepository.save(any())).thenReturn(category);
+        var result = this.categoryService.update(category);
+        assertNotNull(result);
+        assertEquals(Optional.of(category), result);
     }
 
     @Test
     @Override
     public void testUpdateFailed() {
-
+        when(this.categoryRepository.save(any())).thenThrow(NullPointerException.class);
+        assertThrows(NullPointerException.class, () -> this.categoryService.update(category));
     }
 }
