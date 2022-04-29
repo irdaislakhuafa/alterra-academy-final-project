@@ -2,6 +2,7 @@ package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -58,6 +59,26 @@ public class AddressServiceTest {
         assertThrows(NullPointerException.class, () -> {
             this.addressService.save(adressTemp);
         });
+    }
+
+    @Test
+    public void testFindByIdSuccess() {
+        when(this.addressRepository.save(address)).thenReturn(address);
+        when(this.addressRepository.findById(anyString())).thenReturn(Optional.of(address));
+
+        var addressTemp = this.addressService.findById("id");
+
+        assertNotNull(addressTemp);
+        assertEquals(addressTemp.get(), address);
+    }
+
+    @Test
+    public void testFindByIdFailed() {
+        // when(this.addressRepository.findById("id")).thenReturn(any());
+
+        var result = this.addressService.findById(null);
+        assertNotNull(result);
+        assertFalse(result.isPresent());
     }
 
 }
