@@ -1,6 +1,7 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 
@@ -152,6 +153,15 @@ public class AuthorServiceTest {
         when(this.authorRepository.findAllById(anyList())).thenReturn(List.of(author));
         var result = this.authorService.findAllById(List.of("id"));
         assertNotNull(result);
+    }
+
+    @Test
+    public void testUpdateSuccess() {
+        when(this.authorRepository.save(any(Author.class))).thenReturn(author);
+        var result = this.authorService.update(author);
+
+        assertNotNull(result);
+        assertTrue(result.isPresent());
     }
 
 }
