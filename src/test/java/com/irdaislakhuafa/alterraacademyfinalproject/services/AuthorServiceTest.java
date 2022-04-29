@@ -1,7 +1,6 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -71,6 +70,15 @@ public class AuthorServiceTest {
 
         assertNotNull(result);
         assertEquals(author.getEmail(), result.get().getEmail());
+    }
+
+    @Test
+    public void testFindByIdFailed() {
+        when(this.authorRepository.findById("id")).thenReturn(Optional.empty());
+        var result = this.authorService.findById("id");
+
+        assertNotNull(result);
+        assertTrue(!result.isPresent());
     }
 
 }
