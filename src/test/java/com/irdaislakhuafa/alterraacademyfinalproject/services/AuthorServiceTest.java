@@ -177,4 +177,22 @@ public class AuthorServiceTest implements BaseServiceTest {
         assertTrue(result.isPresent());
     }
 
+    @Test
+    @Override
+    public void testSaveFailed() {
+        when(this.authorRepository.save(any())).thenThrow(NullPointerException.class);
+        assertThrows(NullPointerException.class, () -> this.authorService.save(author));
+    }
+
+    @Test
+    @Override
+    public void testUpdateFailed() {
+
+    }
+
+    @Override
+    public void testSaveAllFailed() {
+
+    }
+
 }

@@ -3,6 +3,8 @@ package com.irdaislakhuafa.alterraacademyfinalproject.services;
 public interface BaseServiceTest {
     public void testSaveSuccess();
 
+    public void testSaveFailed();
+
     public void testFindByIdSuccess();
 
     public void testFindByIdFailed();
@@ -23,7 +25,12 @@ public interface BaseServiceTest {
 
     public void testSaveAllSuccess();
 
+    public void testSaveAllFailed();
+
     public void testFindAllByIdSuccess();
 
     public void testUpdateSuccess();
+
+    public void testUpdateFailed();
+
 }

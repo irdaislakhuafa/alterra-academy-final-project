@@ -20,7 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @DisplayNameGeneration(value = SimpleTestNameGenerator.class)
 @SpringBootTest
-public class AddressServiceTest {
+public class AddressServiceTest implements BaseServiceTest {
 
     @MockBean
     private AddressRepository addressRepository;
@@ -46,6 +46,7 @@ public class AddressServiceTest {
     }
 
     @Test
+    @Override
     public void testFindAllSuccess() {
         when(this.addressRepository.findAll()).thenReturn(List.of(address));
         var result = this.addressService.findAll();
@@ -55,6 +56,7 @@ public class AddressServiceTest {
     }
 
     @Test
+    @Override
     public void testSaveSuccess() {
         when(this.addressRepository.save(any())).thenReturn(address);
         Optional<Address> addressOptional = this.addressService.save(address);
@@ -62,6 +64,7 @@ public class AddressServiceTest {
     }
 
     @Test
+    @Override
     public void testSaveFailed() {
         Address adressTemp = null;
         when(this.addressRepository.save(adressTemp)).thenThrow(NullPointerException.class);
@@ -71,6 +74,7 @@ public class AddressServiceTest {
     }
 
     @Test
+    @Override
     public void testFindByIdSuccess() {
         when(this.addressRepository.findById(anyString()))
                 .thenReturn(Optional.of(address));
@@ -82,6 +86,7 @@ public class AddressServiceTest {
     }
 
     @Test
+    @Override
     public void testFindByIdFailed() {
         var result = this.addressService.findById(null);
         assertNotNull(result);
@@ -89,13 +94,15 @@ public class AddressServiceTest {
     }
 
     @Test
-    public void deleteByIdSuccess() {
+    @Override
+    public void testDeleteByIdSuccess() {
         when(this.addressRepository.existsById("id")).thenReturn(true);
         var result = this.addressService.deleteById("id");
         assertTrue(result);
     }
 
     @Test
+    @Override
     public void testDeleteByIdFailed() {
         when(this.addressRepository.existsById("id")).thenReturn(false);
         var result = this.addressService.deleteById("id");
@@ -103,6 +110,7 @@ public class AddressServiceTest {
     }
 
     @Test
+    @Override
     public void testSaveAllSuccess() {
         when(this.addressRepository.saveAll(anyList())).thenReturn(List.of(address));
         var result = this.addressService.saveAll(List.of(address));
@@ -111,12 +119,14 @@ public class AddressServiceTest {
     }
 
     @Test
+    @Override
     public void testSaveAllFailed() {
         when(this.addressRepository.saveAll(null)).thenThrow(NullPointerException.class);
         assertThrows(NullPointerException.class, () -> this.addressService.saveAll(null));
     }
 
     @Test
+    @Override
     public void testFindAllByIdSuccess() {
         when(this.addressRepository.findAllById(anyList()))
                 .thenReturn(List.of(address));
@@ -126,6 +136,7 @@ public class AddressServiceTest {
     }
 
     @Test
+    @Override
     public void testUpdateSuccess() {
         when(this.addressRepository.save(address)).thenReturn(address);
         var result = this.addressService.update(address);
@@ -134,12 +145,14 @@ public class AddressServiceTest {
     }
 
     @Test
+    @Override
     public void testUpdateFailed() {
         when(this.addressRepository.save(any(Address.class))).thenThrow(NullPointerException.class);
         assertThrows(NullPointerException.class, () -> this.addressService.update(address));
     }
 
     @Test
+    @Override
     public void testMapToEntitySuccess() {
         assertNotNull(addressDto);
         assertNotNull(address);
@@ -152,11 +165,21 @@ public class AddressServiceTest {
     }
 
     @Test
+    @Override
     public void testMapToEntitiesSuccess() {
         var mappedAddresses = this.addressService.mapToEntities(List.of(addressDto));
 
         assertNotNull(mappedAddresses);
 
         mappedAddresses.forEach((value) -> assertEquals(value.getCity(), addressDto.getCity()));
+    }
+
+    public void testMapToEntityFailed() {
+
+    }
+
+    @Override
+    public void testMapToEntitiesFailed() {
+
     }
 }
