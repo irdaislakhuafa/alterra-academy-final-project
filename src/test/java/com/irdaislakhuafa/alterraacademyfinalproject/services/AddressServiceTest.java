@@ -2,7 +2,8 @@ package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -11,21 +12,18 @@ import java.util.Optional;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Address;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.AddressRepository;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 public class AddressServiceTest {
 
-    @Mock
+    @MockBean
     private AddressRepository addressRepository;
 
-    @InjectMocks
-    @Spy
+    @Autowired
     private AddressService addressService;
 
     private final Address address = Address.builder()
@@ -35,26 +33,24 @@ public class AddressServiceTest {
             .build();
 
     @Test
-    @Disabled // failed
     public void testNotNull() {
+        assertNotNull(addressRepository);
         assertNotNull(addressService);
     }
 
     @Test
-    @Disabled // failed
     public void testFindAllSuccess() {
-        when(addressService.findAll()).thenReturn(List.of(address));
+        when(this.addressRepository.findAll()).thenReturn(List.of(address));
     }
 
     @Test
-    @Disabled // failed
     public void testSaveSuccess() {
-
-        when(this.addressService.save(address)).thenReturn(Optional.of(address));
+        when(this.addressRepository.save(any())).thenReturn(address);
+        Optional<Address> addressOptional = this.addressService.save(address);
+        assertTrue(addressOptional.isPresent());
     }
 
     @Test
-    @Disabled // failed
     public void testSaveFailed() {
         var adressTemp = address;
         adressTemp.setCity(null);
