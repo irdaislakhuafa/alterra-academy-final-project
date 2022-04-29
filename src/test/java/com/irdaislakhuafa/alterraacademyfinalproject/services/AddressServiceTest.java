@@ -101,6 +101,7 @@ public class AddressServiceTest {
         when(this.addressRepository.saveAll(anyList())).thenReturn(List.of(address));
         var result = this.addressService.saveAll(List.of(address));
         assertNotNull(result);
+        assertEquals(List.of(address), result);
     }
 
     @Test
