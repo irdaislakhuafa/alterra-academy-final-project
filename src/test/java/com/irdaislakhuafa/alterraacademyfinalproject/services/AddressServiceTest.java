@@ -13,6 +13,7 @@ import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.AddressR
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.internal.matchers.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -125,5 +126,16 @@ public class AddressServiceTest {
         var result = this.addressService.update(address);
         assertNotNull(result);
         assertTrue(result.isPresent());
+    }
+
+    @Test
+    public void testUpdateFailed() {
+        when(this.addressRepository.save(any(Address.class))).thenThrow(NullPointerException.class);
+        assertThrows(NullPointerException.class, () -> this.addressService.update(address));
+    }
+
+    @Test
+    public void testMapToEntitySuccess() {
+
     }
 }
