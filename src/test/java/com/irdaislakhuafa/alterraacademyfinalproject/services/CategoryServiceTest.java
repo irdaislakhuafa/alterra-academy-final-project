@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.SimpleTestNameGenerator;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Category;
@@ -47,25 +48,34 @@ public class CategoryServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testSaveFailed() {
-
+        when(this.categoryRepository.save(any())).thenThrow(NullPointerException.class);
+        assertThrows(NullPointerException.class, () -> this.categoryService.save(category));
     }
 
     @Test
     @Override
     public void testFindByIdSuccess() {
+        when(this.categoryRepository.findById("id")).thenReturn(Optional.of(category));
+        var result = this.categoryService.findById("id");
+        assertTrue(result.isPresent());
 
     }
 
     @Test
     @Override
     public void testFindByIdFailed() {
-
+        when(this.categoryRepository.findById("id")).thenReturn(Optional.empty());
+        var resultFailed = this.categoryService.findById("idFailed");
+        assertFalse(resultFailed.isPresent());
     }
 
     @Test
     @Override
     public void testDeleteByIdSuccess() {
+        when(this.categoryRepository.existsById("id")).thenReturn(true);
+        var result = this.categoryService.deleteById("id");
 
+        assertTrue(result);
     }
 
     @Test
