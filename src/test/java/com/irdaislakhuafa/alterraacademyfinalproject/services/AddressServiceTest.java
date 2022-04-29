@@ -1,8 +1,6 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -52,10 +50,11 @@ public class AddressServiceTest {
 
     @Test
     public void testSaveFailed() {
-        var adressTemp = address;
-        adressTemp.setCity(null);
-
-        assertNull(adressTemp.getCity());
-        when(this.addressService.save(adressTemp)).thenThrow(NullPointerException.class);
+        Address adressTemp = null;
+        when(this.addressRepository.save(adressTemp)).thenThrow(NullPointerException.class);
+        assertThrows(NullPointerException.class, () -> {
+            this.addressService.save(adressTemp);
+        });
     }
+
 }
