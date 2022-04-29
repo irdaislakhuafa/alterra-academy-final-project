@@ -7,6 +7,8 @@ import static org.mockito.Mockito.when;
 import java.util.*;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.SimpleTestNameGenerator;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AddressDto;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.PublisherDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Address;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Publisher;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.PublisherRespository;
@@ -38,6 +40,15 @@ public class PublisherServiceTest implements BaseServiceTest {
             .email("irdhaislakhuafa@gmail.com")
             .address(address)
             .books(new ArrayList<>())
+            .build();
+
+    private final PublisherDto publisherDto = PublisherDto.builder()
+            .name("irda islakhu afa")
+            .email("irdhaislakhuafa@gmail.com")
+            .address(AddressDto.builder()
+                    .city(address.getCity())
+                    .country(address.getCountry())
+                    .build())
             .build();
 
     @Test
@@ -102,13 +113,16 @@ public class PublisherServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testMapToEntitySuccess() {
-
+        var mappedPublisher = this.publisherService.mapToEntity(publisherDto);
+        assertNotNull(mappedPublisher);
+        assertEquals(publisher.getEmail(), mappedPublisher.getEmail());
+        assertEquals(publisher.getName(), mappedPublisher.getName());
     }
 
     @Test
     @Override
     public void testMapToEntityFailed() {
-
+        assertThrows(NullPointerException.class, () -> this.publisherService.mapToEntity(null));
     }
 
     @Test
