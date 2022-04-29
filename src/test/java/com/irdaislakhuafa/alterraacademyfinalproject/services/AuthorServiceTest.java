@@ -70,5 +70,7 @@ public class AuthorServiceTest {
         var result = this.authorService.findById("id");
 
         assertNotNull(result);
+        assertEquals(author.getEmail(), result.get().getEmail());
     }
+
 }
