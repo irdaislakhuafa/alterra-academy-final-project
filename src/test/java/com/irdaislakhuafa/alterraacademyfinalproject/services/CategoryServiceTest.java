@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.*;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.SimpleTestNameGenerator;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.CategoryDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Category;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.CategoryRepository;
 
@@ -29,9 +29,14 @@ public class CategoryServiceTest implements BaseServiceTest {
 
     private final Category category = Category.builder()
             .id("id")
-            .name("categoriy 1")
+            .name("category 1")
             .description("-")
             .books(new ArrayList<>())
+            .build();
+
+    private final CategoryDto categoryDto = CategoryDto.builder()
+            .name("category 1")
+            .description("-")
             .build();
 
     @Test
@@ -90,13 +95,20 @@ public class CategoryServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testFindAllSuccess() {
+        when(this.categoryRepository.findAll()).thenReturn(List.of(category));
+        var result = this.categoryService.findAll();
 
+        assertNotNull(result);
+        assertEquals(List.of(category), result);
     }
 
     @Test
     @Override
     public void testMapToEntitySuccess() {
-
+        var mappedCategory = this.categoryService.mapToEntity(categoryDto);
+        assertNotNull(mappedCategory);
+        assertEquals(category.getName(), mappedCategory.getName());
+        assertEquals(category.getDescription(), mappedCategory.getDescription());
     }
 
     @Test
