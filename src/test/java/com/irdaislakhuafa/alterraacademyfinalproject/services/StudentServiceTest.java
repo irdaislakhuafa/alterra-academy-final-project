@@ -4,19 +4,23 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
+import com.irdaislakhuafa.alterraacademyfinalproject.SimpleTestNameGenerator;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.StudentDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Address;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Student;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.StudentRepository;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+@DisplayNameGeneration(value = SimpleTestNameGenerator.class)
 @SpringBootTest
+@Tag(value = "studentServiceTest")
 public class StudentServiceTest implements BaseServiceTest {
     @MockBean
     private StudentRepository studentRepository;
@@ -158,7 +162,10 @@ public class StudentServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testUpdateSuccess() {
-
+        when(this.studentRepository.save(any())).thenReturn(student);
+        var result = this.studentService.update(student);
+        assertNotNull(result);
+        assertTrue(result.isPresent());
     }
 
     @Test
