@@ -1,26 +1,15 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
-import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logEntityFound;
-import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logEntityNotFound;
-import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logFindAll;
-import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logMapDtoToEntity;
-import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logPrepareFindById;
-import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logSave;
-import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logSuccessDelete;
-import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logSuccessFindAll;
-import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logSuccessMapDtoToEntity;
-import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logSuccessSave;
-import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logSuccessUpdate;
-import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logUpdate;
+import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.*;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AddressDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.StudentDto;
-import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Address;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Student;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.StudentRepository;
 
