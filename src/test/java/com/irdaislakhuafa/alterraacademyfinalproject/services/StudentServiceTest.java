@@ -1,7 +1,6 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -65,25 +64,31 @@ public class StudentServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testFindByIdFailed() {
-
+        when(this.studentRepository.findById(anyString())).thenReturn(Optional.empty());
+        assertFalse(this.studentService.findById("id").isPresent());
     }
 
     @Test
     @Override
     public void testDeleteByIdSuccess() {
-
+        when(this.studentRepository.existsById(anyString())).thenReturn(true);
+        assertTrue(this.studentService.deleteById("id"));
     }
 
     @Test
     @Override
     public void testDeleteByIdFailed() {
-
+        when(this.studentRepository.existsById(anyString())).thenReturn(false);
+        assertFalse(this.studentService.deleteById("id"));
     }
 
     @Test
     @Override
     public void testFindAllSuccess() {
-
+        when(this.studentRepository.findAll()).thenReturn(List.of(student));
+        var result = this.studentService.findAll();
+        assertNotNull(result);
+        assertEquals(List.of(student), result);
     }
 
     @Test
