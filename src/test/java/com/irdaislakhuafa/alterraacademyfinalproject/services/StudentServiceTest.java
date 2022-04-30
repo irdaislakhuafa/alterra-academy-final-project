@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.SimpleTestNameGenerator;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AddressDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.StudentDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Address;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Student;
@@ -30,6 +30,11 @@ public class StudentServiceTest implements BaseServiceTest {
 
     private final Address address = Address.builder()
             .id("id")
+            .city("tuban")
+            .country("indonesia")
+            .build();
+
+    private final AddressDto addressDto = AddressDto.builder()
             .city("tuban")
             .country("indonesia")
             .build();
@@ -171,7 +176,15 @@ public class StudentServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testUpdateFailed() {
-
+        when(this.studentRepository.save(any())).thenThrow(NullPointerException.class);
+        assertThrows(NullPointerException.class, () -> this.studentService.update(student));
     }
 
+    @Test
+    public void testAddAddressTest() {
+        when(this.studentRepository.save(any())).thenReturn(student);
+        var result = this.studentService.addAddress(Optional.of(student), List.of(addressDto));
+        assertNotNull(result);
+        assertEquals(address.getCity(), result.get().getAddresses().get(0).getCity());
+    }
 }

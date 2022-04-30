@@ -13,14 +13,14 @@ import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.log
 import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logSuccessUpdate;
 import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.logUpdate;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AddressDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.StudentDto;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Address;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Student;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.StudentRepository;
 
@@ -122,8 +122,13 @@ public class StudentService implements BaseService<Student, StudentDto> {
 
     public Optional<Student> addAddress(Optional<Student> targetUpdate, List<AddressDto> addressDtos) {
         var savedAddresses = this.addressService.saveAll(this.addressService.mapToEntities(addressDtos));
-        targetUpdate.get().getAddresses().addAll(savedAddresses);
-        targetUpdate = this.save(targetUpdate.get());
+        var addresses = targetUpdate.get().getAddresses();
+        // var newAddress = new ArrayList<Address>();
+
+        savedAddresses.addAll(addresses);
+
+        targetUpdate.get().setAddresses(savedAddresses);
+        targetUpdate = this.update(targetUpdate.get());
         log.info("Success add address for student");
         return targetUpdate;
     }
