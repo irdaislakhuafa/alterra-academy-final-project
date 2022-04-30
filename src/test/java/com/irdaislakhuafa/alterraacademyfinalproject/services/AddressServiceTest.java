@@ -12,13 +12,13 @@ import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AddressDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Address;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.AddressRepository;
 
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @DisplayNameGeneration(value = SimpleTestNameGenerator.class)
+@Tag(value = "addressServiceTest")
 @SpringBootTest
 public class AddressServiceTest implements BaseServiceTest {
 
