@@ -89,12 +89,17 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd
+            baseDir="Apps/irdaislakhuafa/school-library"
             appDir="$(ls Apps/irdaislakhuafa/ | grep school-library)"
             if [ "$appDir" = "" ]; then 
-              mkdir -pv Apps/irdaislakhuafa/school-library
+              mkdir -pv "$baseDir"
             else 
-              rm -rfv Apps/irdaislakhuafa/school-library/*
+              rm -rfv $baseDir/*
             fi
+
+            docker pull nginx:latest
+            docker run --rm -d --name jacoco_code_cover -p 9000:80 nginx:latest
+            docker cp 
       
       - name: Copy resource file to server
         uses: appleboy/scp-action@master
