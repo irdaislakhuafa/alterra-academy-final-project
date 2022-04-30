@@ -1,0 +1,143 @@
+package com.irdaislakhuafa.alterraacademyfinalproject.services;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+import java.util.Optional;
+
+import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Address;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Student;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.StudentRepository;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+
+@SpringBootTest
+public class StudentServiceTest implements BaseServiceTest {
+    @MockBean
+    private StudentRepository studentRepository;
+
+    @Autowired
+    private StudentService studentService;
+
+    private final Address address = Address.builder()
+            .id("id")
+            .city("tuban")
+            .country("indonesia")
+            .build();
+
+    private final Student student = Student.builder()
+            .id("id")
+            .name("irda islakhu afa")
+            .email("irdhaislakhuafa@gmail.com")
+            .semester(Byte.valueOf("6"))
+            .batchOfYears(2019)
+            .addresses(List.of(address))
+            .build();
+
+    @Test
+    @Override
+    public void testSaveSuccess() {
+        when(this.studentRepository.save(any())).thenReturn(student);
+        assertTrue(this.studentService.save(student).isPresent());
+    }
+
+    @Test
+    @Override
+    public void testSaveFailed() {
+        when(this.studentRepository.save(any())).thenReturn(null);
+        assertThrows(NullPointerException.class, () -> this.studentService.save(student));
+    }
+
+    @Test
+    @Override
+    public void testFindByIdSuccess() {
+        when(this.studentRepository.findById(anyString())).thenReturn(Optional.of(student));
+        assertTrue(this.studentService.findById("id").isPresent());
+    }
+
+    @Test
+    @Override
+    public void testFindByIdFailed() {
+
+    }
+
+    @Test
+    @Override
+    public void testDeleteByIdSuccess() {
+
+    }
+
+    @Test
+    @Override
+    public void testDeleteByIdFailed() {
+
+    }
+
+    @Test
+    @Override
+    public void testFindAllSuccess() {
+
+    }
+
+    @Test
+    @Override
+    public void testMapToEntitySuccess() {
+
+    }
+
+    @Test
+    @Override
+    public void testMapToEntityFailed() {
+
+    }
+
+    @Test
+    @Override
+    public void testMapToEntitiesSuccess() {
+
+    }
+
+    @Test
+    @Override
+    public void testMapToEntitiesFailed() {
+
+    }
+
+    @Test
+    @Override
+    public void testSaveAllSuccess() {
+
+    }
+
+    @Test
+    @Override
+    public void testSaveAllFailed() {
+
+    }
+
+    @Test
+    @Override
+    public void testFindAllByIdSuccess() {
+
+    }
+
+    @Test
+    @Override
+    public void testUpdateSuccess() {
+
+    }
+
+    @Test
+    @Override
+    public void testUpdateFailed() {
+
+    }
+
+}
