@@ -1,8 +1,7 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -115,13 +114,15 @@ public class StudentServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testMapToEntityFailed() {
-
+        assertThrows(NullPointerException.class, () -> this.studentService.mapToEntity(null));
     }
 
     @Test
     @Override
     public void testMapToEntitiesSuccess() {
-
+        var mappedEntities = this.studentService.mapToEntities(List.of(studentDto));
+        assertNotNull(mappedEntities);
+        assertEquals(student.getEmail(), mappedEntities.get(0).getEmail());
     }
 
     @Test
