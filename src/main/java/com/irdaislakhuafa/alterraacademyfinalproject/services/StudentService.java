@@ -112,7 +112,6 @@ public class StudentService implements BaseService<Student, StudentDto> {
     public Optional<Student> addAddress(Optional<Student> targetUpdate, List<AddressDto> addressDtos) {
         var savedAddresses = this.addressService.saveAll(this.addressService.mapToEntities(addressDtos));
         var addresses = targetUpdate.get().getAddresses();
-        // var newAddress = new ArrayList<Address>();
 
         savedAddresses.addAll(addresses);
 
