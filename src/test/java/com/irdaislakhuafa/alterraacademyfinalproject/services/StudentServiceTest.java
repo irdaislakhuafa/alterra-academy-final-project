@@ -4,8 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.StudentDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Address;
@@ -128,25 +127,32 @@ public class StudentServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testMapToEntitiesFailed() {
-
+        assertThrows(NullPointerException.class, () -> this.studentService.mapToEntities(null));
     }
 
     @Test
     @Override
     public void testSaveAllSuccess() {
-
+        when(this.studentRepository.saveAll(List.of(student))).thenReturn(List.of(student));
+        var result = this.studentService.saveAll(List.of(student));
+        assertNotNull(result);
+        assertEquals(student, result.get(0));
     }
 
     @Test
     @Override
     public void testSaveAllFailed() {
-
+        when(this.studentRepository.saveAll(List.of(student))).thenThrow(NullPointerException.class);
+        assertThrows(NullPointerException.class, () -> this.studentService.saveAll(List.of(student)));
     }
 
     @Test
     @Override
     public void testFindAllByIdSuccess() {
-
+        when(this.studentRepository.findAllById(anyList())).thenReturn(List.of(student));
+        var result = this.studentService.findAllById(List.of("id"));
+        assertNotNull(result);
+        assertEquals(List.of(student), result);
     }
 
     @Test

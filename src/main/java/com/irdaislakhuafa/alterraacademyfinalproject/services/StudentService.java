@@ -112,7 +112,7 @@ public class StudentService implements BaseService<Student, StudentDto> {
 
     @Override
     public List<Student> findAllById(List<String> ids) {
-        return this.findAllById(ids);
+        return this.studentRepository.findAllById(ids);
     }
 
     @Override
