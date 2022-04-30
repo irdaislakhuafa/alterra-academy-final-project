@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Optional;
 
+import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.StudentDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Address;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Student;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.StudentRepository;
@@ -38,6 +39,13 @@ public class StudentServiceTest implements BaseServiceTest {
             .semester(Byte.valueOf("6"))
             .batchOfYears(2019)
             .addresses(List.of(address))
+            .build();
+
+    private final StudentDto studentDto = StudentDto.builder()
+            .name(student.getName())
+            .email(student.getEmail())
+            .semester(student.getSemester())
+            .batchOfYears(student.getBatchOfYears())
             .build();
 
     @Test
@@ -94,7 +102,14 @@ public class StudentServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testMapToEntitySuccess() {
-
+        var mappedStudent = this.studentService.mapToEntity(studentDto);
+        assertNotNull(mappedStudent);
+        assertNotEquals(student.getId(), mappedStudent.getId());
+        assertEquals(student.getName(), mappedStudent.getName());
+        assertEquals(student.getEmail(), mappedStudent.getEmail());
+        assertEquals(student.getSemester(), mappedStudent.getSemester());
+        assertEquals(student.getBatchOfYears(), mappedStudent.getBatchOfYears());
+        assertNotEquals(student.getAddresses(), mappedStudent.getAddresses());
     }
 
     @Test
