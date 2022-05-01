@@ -115,10 +115,18 @@ jobs:
               rm -rfv $baseDir/*
             fi
 
-            docker pull nginx:latest
-            docker run --rm -d --name jacoco_code_cover -p 9000:80 nginx:latest
-            docker cp 
-      
+            appCc="school-library-cc"
+            appCcImage="irdaislakhuafa/school-library-code-coverage:latest""
+            appCcContainer="$(docker ps | grep $appCc)"
+
+            if [ "$appCcContainer" = "" ]; then 
+              docker run -d --rm -p 1000 --name "$appCc" "$appCcImage" 
+            else 
+              docker stop "$appCcContainer"
+              docker rmi "$appCcImage"
+              docker run -d --rm -p 1000 --name "$appCc" "$appCcImage" 
+            fi
+
       - name: Copy resource file to server
         uses: appleboy/scp-action@master
         with:
