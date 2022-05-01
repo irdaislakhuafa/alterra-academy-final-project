@@ -85,13 +85,6 @@ jobs:
           push: true
           tags: irdaislakhuafa/school-library:latest
 
-      - name: Build code coverage history with docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: ./env/CodeCoverage/
-          push: true
-          tags: irdaislakhuafa/school-library-code-coverage:latest
-
       - name: Save maven cache
         uses: skjolber/maven-cache-github-action@v1
         with:
