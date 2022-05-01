@@ -116,7 +116,7 @@ jobs:
             fi
 
             appCc="school-library-cc"
-            appCcImage="irdaislakhuafa/school-library-code-coverage:latest""
+            appCcImage="irdaislakhuafa/school-library-code-coverage:latest"
             appCcContainer="$(docker ps | grep $appCc)"
 
             if [ "$appCcContainer" = "" ]; then 
