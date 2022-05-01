@@ -120,11 +120,11 @@ jobs:
             appCcContainer="$(docker ps | grep $appCc)"
 
             if [ "$appCcContainer" = "" ]; then 
-              docker run -d --rm -p 1000 --name "$appCc" "$appCcImage" 
+              docker run -d --rm -p 1000:80 --name "$appCc" "$appCcImage" 
             else 
               docker stop "$appCcContainer"
               docker rmi "$appCcImage"
-              docker run -d --rm -p 1000 --name "$appCc" "$appCcImage" 
+              docker run -d --rm -p 1000:80 --name "$appCc" "$appCcImage" 
             fi
 
       - name: Copy resource file to server
