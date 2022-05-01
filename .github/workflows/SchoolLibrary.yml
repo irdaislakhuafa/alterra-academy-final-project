@@ -122,8 +122,8 @@ jobs:
             if [ "$appCcContainer" = "" ]; then 
               docker run -d --rm -p 1000:80 --name "$appCc" "$appCcImage" 
             else 
-              docker stop "$appCcContainer"
-              docker rm "$appCcContainer"
+              docker stop "$appCc"
+              docker rm "$appCc"
               docker rmi "$appCcImage"
               docker run -d --rm -p 1000:80 --name "$appCc" "$appCcImage" 
             fi
