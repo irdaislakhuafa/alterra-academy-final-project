@@ -107,9 +107,9 @@ public class BookService implements BaseService<Book, BookDto> {
         return bookRepository.saveAll(entities);
     }
 
-    public Optional<Book> findByName(String name) {
-        logPrepareFindByName(Book.builder().build(), name);
-        var book = bookRepository.findByTitleEqualsIgnoreCase(name);
+    public Optional<Book> findByTitle(String title) {
+        logPrepareFindByName(Book.builder().build(), title);
+        var book = bookRepository.findByTitleEqualsIgnoreCase(title);
 
         if (!book.isPresent()) {
             logEntityNotFound(Book.builder().build());
@@ -117,6 +117,11 @@ public class BookService implements BaseService<Book, BookDto> {
         }
         logEntityFound(Book.builder().build());
         return book;
+    }
+
+    public List<Book> findByTitleContains(String title) {
+        var books = this.bookRepository.findByTitleContainsIgnoreCase(title);
+        return books;
     }
 
 }

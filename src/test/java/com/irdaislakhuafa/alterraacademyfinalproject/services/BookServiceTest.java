@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.util.Date;
@@ -77,7 +78,7 @@ public class BookServiceTest implements BaseServiceTest {
 
     private final Book book = Book.builder()
             .id("bookId")
-            .title("Book 1")
+            .title("book 1")
             .description("-")
             .authors(List.of(author))
             .publishedDate(new Date())
@@ -88,9 +89,9 @@ public class BookServiceTest implements BaseServiceTest {
     private final BookDto bookDto = BookDto.builder()
             .title("book 1")
             .description("-")
-            .authorIds(List.of(author.getId()))
-            .publisherIds(List.of(publisher.getId()))
-            .categoryIds(List.of(category.getId()))
+            // .authorIds(List.of(author.getId()))
+            // .publisherIds(List.of(publisher.getId()))
+            // .categoryIds(List.of(category.getId()))
             .build();
 
     @Test
@@ -153,12 +154,9 @@ public class BookServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testMapToEntitySuccess() {
-        // when(this.categoryService.findAllById(anyList())).thenReturn(List.of(category));
-        // when(this.publisherService.findAllById(anyList())).thenReturn(List.of(publisher));
-        // when(this.authorService.findAllById(anyList())).thenReturn(List.of(author));
-
-        // var result = this.bookService.mapToEntity(bookDto);
-        // assertNotNull(result);
+        var result = this.bookService.mapToEntity(bookDto);
+        assertNotNull(result);
+        assertEquals(book.getTitle(), result.getTitle());
     }
 
     @Test
@@ -170,7 +168,9 @@ public class BookServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testMapToEntitiesSuccess() {
-
+        var result = this.bookService.mapToEntities(List.of(bookDto));
+        assertNotNull(result);
+        assertEquals(book.getTitle(), result.get(0).getTitle());
     }
 
     @Test
@@ -196,13 +196,19 @@ public class BookServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testFindAllByIdSuccess() {
-
+        when(this.bookRepository.findAllById(List.of(book.getId()))).thenReturn(List.of(book));
+        var result = this.bookService.findAllById(List.of(book.getId()));
+        assertNotNull(result);
+        assertEquals(1, result.size());
     }
 
     @Test
     @Override
     public void testUpdateSuccess() {
-
+        when(this.bookRepository.save(any())).thenReturn(book);
+        var result = this.bookService.update(book);
+        assertNotNull(result);
+        assertTrue(result.isPresent());
     }
 
     @Test
@@ -211,4 +217,25 @@ public class BookServiceTest implements BaseServiceTest {
 
     }
 
+    @Test
+    public void findByTitleSuccess() {
+        when(this.bookRepository.findByTitleEqualsIgnoreCase(anyString())).thenReturn(Optional.of(book));
+        var result = this.bookService.findByTitle("title");
+        assertNotNull(result);
+    }
+
+    @Test
+    public void findByTitleFailed() {
+        when(this.bookRepository.findByTitleEqualsIgnoreCase(anyString())).thenReturn(Optional.empty());
+        var result = this.bookService.findByTitle("title");
+        assertNotNull(result);
+    }
+
+    @Test
+    public void findByTitleContains() {
+        when(this.bookRepository.findByTitleContainsIgnoreCase(anyString())).thenReturn(List.of(book));
+        var result = this.bookService.findByTitleContains("title");
+        assertNotNull(result);
+        assertEquals(1, result.size());
+    }
 }
