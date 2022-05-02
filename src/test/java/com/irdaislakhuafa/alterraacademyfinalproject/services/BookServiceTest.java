@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 
 import java.util.Date;
@@ -36,14 +37,14 @@ public class BookServiceTest implements BaseServiceTest {
     @MockBean
     private BookRepository bookRepository;
 
-    @MockBean
-    private AuthorService authorService;
+    // @MockBean
+    // private AuthorService authorService;
 
-    @MockBean
-    private PublisherService publisherService;
+    // @MockBean
+    // private PublisherService publisherService;
 
-    @MockBean
-    private CategoryService categoryService;
+    // @MockBean
+    // private CategoryService categoryService;
 
     @Autowired
     private BookService bookService;
@@ -181,7 +182,9 @@ public class BookServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testSaveAllSuccess() {
-
+        when(this.bookRepository.saveAll(anyList())).thenReturn(List.of(book));
+        var result = this.bookService.saveAll(List.of(book));
+        assertNotNull(result);
     }
 
     @Test
