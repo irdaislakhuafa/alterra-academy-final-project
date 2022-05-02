@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, String> {
-    public Optional<Book> findByNameEqualsIgnoreCase(String name);
+    public Optional<Book> findByTitleEqualsIgnoreCase(String name);
 }

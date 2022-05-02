@@ -109,7 +109,7 @@ public class BookService implements BaseService<Book, BookDto> {
 
     public Optional<Book> findByName(String name) {
         logPrepareFindByName(Book.builder().build(), name);
-        var book = bookRepository.findByNameEqualsIgnoreCase(name);
+        var book = bookRepository.findByTitleEqualsIgnoreCase(name);
 
         if (!book.isPresent()) {
             logEntityNotFound(Book.builder().build());
