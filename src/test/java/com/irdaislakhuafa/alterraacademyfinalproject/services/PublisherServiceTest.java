@@ -14,13 +14,13 @@ import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Address;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Publisher;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.PublisherRespository;
 
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @DisplayNameGeneration(value = SimpleTestNameGenerator.class)
+@Tag(value = "publisherServiceTest")
 @SpringBootTest
 public class PublisherServiceTest implements BaseServiceTest {
     @MockBean

@@ -102,7 +102,7 @@ public class CategoryService implements BaseService<Category, CategoryDto> {
     }
 
     public Optional<Category> findByName(String name) {
-        logPrepareFindById(Category.builder().name(name).build());
+        logPrepareFindByName(Category.builder().build(), name);
         var category = categoryRepository.findByNameEqualsIgnoreCase(name);
 
         if (!category.isPresent()) {

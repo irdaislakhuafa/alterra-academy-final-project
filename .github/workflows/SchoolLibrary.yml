@@ -33,6 +33,24 @@ jobs:
        - name: Running `mvn test`
          run: mvn test verify
 
+
+       - name: Preparing code coverage history
+         run: rm -rfv env/CodeCoverage/html && mv -v target/site/jacoco/  env/CodeCoverage/html
+
+       - name: Login to Docker
+         uses: docker/login-action@v1
+         with:
+           username: ${{ secrets.DOCKER_USERNAME }}
+           password: ${{ secrets.DOCKER_TOKEN }}
+       
+       - name: Build image for code coverage
+         uses: docker/build-push-action@v2
+         with:
+           context: ./env/CodeCoverage/
+           push: true
+           tags: irdaislakhuafa/school-library-code-coverage:latest
+         
+
        - name: Save maven cache
          uses: skjolber/maven-cache-github-action@v1
          with:
@@ -89,13 +107,27 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd
+            baseDir="Apps/irdaislakhuafa/school-library"
             appDir="$(ls Apps/irdaislakhuafa/ | grep school-library)"
             if [ "$appDir" = "" ]; then 
-              mkdir -pv Apps/irdaislakhuafa/school-library
+              mkdir -pv "$baseDir"
             else 
-              rm -rfv Apps/irdaislakhuafa/school-library/*
+              rm -rfv $baseDir/*
             fi
-      
+
+            appCc="school-library-cc"
+            appCcImage="irdaislakhuafa/school-library-code-coverage:latest"
+            appCcContainer="$(docker ps | grep $appCc)"
+
+            if [ "$appCcContainer" = "" ]; then 
+              docker run -d --rm -p 1000:80 --name "$appCc" "$appCcImage" 
+            else 
+              docker stop "$appCc"
+              docker rm "$appCc"
+              docker rmi "$appCcImage"
+              docker run -d --rm -p 1000:80 --name "$appCc" "$appCcImage" 
+            fi
+
       - name: Copy resource file to server
         uses: appleboy/scp-action@master
         with:

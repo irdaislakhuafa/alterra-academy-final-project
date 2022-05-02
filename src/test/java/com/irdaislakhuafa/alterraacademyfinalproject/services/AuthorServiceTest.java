@@ -13,13 +13,13 @@ import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AuthorDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.*;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.AuthorRepository;
 
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @DisplayNameGeneration(value = SimpleTestNameGenerator.class)
+@Tag(value = "authorServiceTest")
 @SpringBootTest(classes = { AuthorService.class })
 public class AuthorServiceTest implements BaseServiceTest {
     @MockBean

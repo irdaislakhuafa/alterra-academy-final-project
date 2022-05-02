@@ -30,7 +30,7 @@ public class Student extends BaseEntity {
     private String email;
 
     @Column(nullable = false)
-    private Byte semester;
+    private byte semester;
 
     @Column(nullable = false)
     private int batchOfYears;
