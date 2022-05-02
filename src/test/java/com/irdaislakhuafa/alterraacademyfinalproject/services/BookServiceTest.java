@@ -83,15 +83,12 @@ public class BookServiceTest implements BaseServiceTest {
             .authors(List.of(author))
             .publishedDate(new Date())
             .categories(List.of(category))
-            .publishers(null)
+            .publishers(List.of(publisher))
             .build();
 
     private final BookDto bookDto = BookDto.builder()
             .title("book 1")
             .description("-")
-            // .authorIds(List.of(author.getId()))
-            // .publisherIds(List.of(publisher.getId()))
-            // .categoryIds(List.of(category.getId()))
             .build();
 
     @Test
