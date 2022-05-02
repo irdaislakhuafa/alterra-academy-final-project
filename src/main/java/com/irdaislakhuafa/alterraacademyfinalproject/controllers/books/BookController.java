@@ -12,6 +12,7 @@ import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,4 +45,17 @@ public class BookController {
             return ResponseEntity.internalServerError().body(error(e.getMessage()));
         }
     }
+
+    @GetMapping
+    public ResponseEntity<?> findAll() {
+        try {
+            log.info("Request find all books");
+            var response = success(this.bookService.findAll());
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error(e.getMessage()));
+        }
+    }
+
 }
