@@ -37,7 +37,7 @@ public class BookService implements BaseService<Book, BookDto> {
     @Override
     public Optional<Book> update(Book entity) {
         logUpdate(entity);
-        var book = this.findById(entity.getId());
+        var book = this.bookRepository.findById(entity.getId());
 
         if (!book.isPresent()) {
             throw new NoSuchElementException("Book with id: " + entity.getId() + " not found");

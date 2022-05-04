@@ -82,8 +82,8 @@ public class BookServiceTest implements BaseServiceTest {
             .description("-")
             .authors(List.of(author))
             .publishedDate(new Date())
-            .categories(List.of(category))
-            .publishers(List.of(publisher))
+            // .categories(List.of(category))
+            // .publishers(List.of(publisher))
             .build();
 
     private final BookDto bookDto = BookDto.builder()
@@ -202,6 +202,7 @@ public class BookServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testUpdateSuccess() {
+        when(this.bookRepository.findById(anyString())).thenReturn(Optional.of(book));
         when(this.bookRepository.save(any())).thenReturn(book);
         var result = this.bookService.update(book);
         assertNotNull(result);

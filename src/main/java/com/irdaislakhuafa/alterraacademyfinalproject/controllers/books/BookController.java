@@ -11,11 +11,13 @@ import javax.validation.Valid;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.BookDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiChangeRequests;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiTargetIdRequest;
 import com.irdaislakhuafa.alterraacademyfinalproject.services.BookService;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -83,5 +85,30 @@ public class BookController {
             log.error("Error: " + e.getMessage());
             return ResponseEntity.internalServerError().body(error(e.getMessage()));
         }
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteById(@RequestBody @Valid ApiTargetIdRequest request, Errors errors) {
+        log.info("Request delete book by id");
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(validationFailed(this.apiValidation.getErrorMessages(errors)));
+        }
+
+        try {
+            var targetDelete = this.bookService.findById(request.getTargetId());
+            var message = "Book with id: " + request.getTargetId() + " not found";
+
+            if (!targetDelete.isPresent()) {
+                log.error(message);
+                return ResponseEntity.badRequest().body(failed(message));
+            }
+
+            this.bookService.deleteById(request.getTargetId());
+            return ResponseEntity.ok(success(targetDelete));
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+
     }
 }
