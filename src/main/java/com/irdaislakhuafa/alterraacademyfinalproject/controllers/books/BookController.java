@@ -1,12 +1,16 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.controllers.books;
 
 import static com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiResponse.error;
+import static com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiResponse.failed;
 import static com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiResponse.success;
 import static com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiResponse.validationFailed;
+
+import java.util.NoSuchElementException;
 
 import javax.validation.Valid;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.BookDto;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiChangeRequests;
 import com.irdaislakhuafa.alterraacademyfinalproject.services.BookService;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
 
@@ -14,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,4 +63,25 @@ public class BookController {
         }
     }
 
+    @PutMapping
+    public ResponseEntity<?> update(@RequestBody @Valid ApiChangeRequests<BookDto> requests, Errors errors) {
+        if (errors.hasErrors()) {
+            log.error("Validation error");
+            return ResponseEntity.badRequest().body(validationFailed(this.apiValidation.getErrorMessages(errors)));
+        }
+
+        try {
+            var book = this.bookService.mapToEntity(requests.getData());
+            book.setId(requests.getTargetId());
+            book = this.bookService.update(book).get();
+
+            return ResponseEntity.ok(success(book));
+        } catch (NoSuchElementException e) {
+            log.error("Error: " + e.getMessage());
+            return ResponseEntity.badRequest().body(failed(e.getMessage()));
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error(e.getMessage()));
+        }
+    }
 }

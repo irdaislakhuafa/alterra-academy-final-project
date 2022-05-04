@@ -3,6 +3,7 @@ package com.irdaislakhuafa.alterraacademyfinalproject.services;
 import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,11 @@ public class BookService implements BaseService<Book, BookDto> {
     @Override
     public Optional<Book> update(Book entity) {
         logUpdate(entity);
+        var book = this.findById(entity.getId());
+
+        if (!book.isPresent()) {
+            throw new NoSuchElementException("Book with id: " + entity.getId() + " not found");
+        }
         var updatedBook = Optional.of(bookRepository.save(entity));
         logSuccessUpdate(entity);
         return updatedBook;
