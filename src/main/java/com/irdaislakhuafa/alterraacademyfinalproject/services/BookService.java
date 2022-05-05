@@ -2,9 +2,7 @@ package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
 import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.*;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -90,9 +88,9 @@ public class BookService implements BaseService<Book, BookDto> {
         var book = Book.builder()
                 .title(dto.getTitle())
                 .description(dto.getDescription())
-                .authors(this.authorService.findAllById(dto.getAuthorIds()))
-                .publishers(this.publisherService.findAllById(dto.getPublisherIds()))
-                .categories(this.categoryService.findAllById(dto.getCategoryIds()))
+                .authors(new HashSet<>(this.authorService.findAllById(dto.getAuthorIds())))
+                .publishers(new HashSet<>(this.publisherService.findAllById(dto.getPublisherIds())))
+                .categories(new HashSet<>(this.categoryService.findAllById(dto.getCategoryIds())))
                 .build();
         logSuccessMapDtoToEntity(book);
         return book;

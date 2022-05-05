@@ -1,12 +1,10 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.SimpleTestNameGenerator;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.AuthorDto;
@@ -44,7 +42,7 @@ public class AuthorServiceTest implements BaseServiceTest {
             .id("bookId")
             .title("book 1")
             .description("-")
-            .categories(List.of(category))
+            .categories(new HashSet<>(List.of(category)))
             .build();
 
     private final Author author = Author.builder()
