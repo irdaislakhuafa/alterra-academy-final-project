@@ -108,6 +108,26 @@ public class BookController {
             log.error("Error: " + e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
+    }
 
+    @GetMapping(value = { "/findBy/id" })
+    public ResponseEntity<?> findById(@RequestBody @Valid ApiTargetIdRequest request, Errors errors) {
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(validationFailed(this.apiValidation.getErrorMessages(errors)));
+        }
+
+        try {
+            var book = this.bookService.findById(request.getTargetId());
+            if (!book.isPresent()) {
+                var message = "book with id: " + request.getTargetId() + " not found";
+                log.error(message);
+                return ResponseEntity.badRequest().body(failed(message));
+            }
+
+            return ResponseEntity.ok(success(book));
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error(e.getMessage()));
+        }
     }
 }
