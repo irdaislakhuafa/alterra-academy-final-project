@@ -103,8 +103,7 @@ public class BookController {
                 return ResponseEntity.badRequest().body(failed(message));
             }
 
-            this.bookService.deleteById(request.getTargetId());
-            return ResponseEntity.ok(success(targetDelete));
+            return ResponseEntity.ok(success(this.bookService.deleteById(request.getTargetId())));
         } catch (Exception e) {
             log.error("Error: " + e.getMessage());
             return ResponseEntity.internalServerError().body(e.getMessage());
