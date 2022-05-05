@@ -47,6 +47,7 @@ public class BookAuthorController {
             var book = this.bookService.findById(bookAuthor.getBookId()).get();
             book.getAuthors().add(this.authorService.findById(bookAuthor.getAuthorId()).get());
             book = bookService.update(book).get();
+
             return ResponseEntity.ok(success(book));
         } catch (Exception e) {
             log.error("Error: " + e.getMessage());
