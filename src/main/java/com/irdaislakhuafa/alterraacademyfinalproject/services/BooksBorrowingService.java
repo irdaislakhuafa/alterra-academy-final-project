@@ -87,7 +87,7 @@ public class BooksBorrowingService implements BaseService<BooksBorrowing, BooksB
                 .students(this.studentService.findAllById(dto.getStudentsIds()))
                 .build();
         logSuccessMapDtoToEntity(tempValue);
-        return null;
+        return value;
     }
 
     @Override
