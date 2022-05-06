@@ -55,4 +55,42 @@ public class BookPublisherController {
             return ResponseEntity.internalServerError().body(error(e.getMessage()));
         }
     }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteById(@RequestBody @Valid BookPublisher requests, Errors errors) {
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(validationFailed(apiValidation.getErrorMessages(errors)));
+        }
+
+        try {
+            var book = this.bookService.findById(requests.getBookId());
+
+            if (!book.isPresent()) {
+                var message = "book with id: " + requests.getBookId() + " not found";
+                log.warn(message);
+                return ResponseEntity.badRequest().body(failed(message));
+            }
+
+            var publisherIsPresentOnBook = book
+                    .get()
+                    .getPublishers()
+                    .stream()
+                    .filter((a) -> a.getId().equals(requests.getPublisherId()))
+                    .findFirst()
+                    .isPresent();
+
+            if (!publisherIsPresentOnBook) {
+                var message = "publisher with id: " + requests.getPublisherId() + " not found";
+                log.warn(message);
+                return ResponseEntity.badRequest().body(failed(message));
+            }
+
+            book.get().getPublishers().removeIf((a) -> a.getId().equals(requests.getPublisherId()));
+            book = this.bookService.update(book.get());
+            return ResponseEntity.ok(success(null));
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error(e.getMessage()));
+        }
+    }
 }
