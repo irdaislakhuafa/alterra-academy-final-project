@@ -4,6 +4,7 @@ import static com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiResponse.*;
 
 import javax.validation.Valid;
 
+import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiSourceTargetIdRequest;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.books.BookAuthor;
 import com.irdaislakhuafa.alterraacademyfinalproject.services.AuthorService;
 import com.irdaislakhuafa.alterraacademyfinalproject.services.BookService;
@@ -49,6 +50,44 @@ public class BookAuthorController {
             book = bookService.update(book).get();
 
             return ResponseEntity.ok(success(book));
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error(e.getMessage()));
+        }
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteById(@RequestBody @Valid ApiSourceTargetIdRequest requests, Errors errors) {
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(validationFailed(apiValidation.getErrorMessages(errors)));
+        }
+
+        try {
+            var book = this.bookService.findById(requests.getSourceId());
+
+            if (!book.isPresent()) {
+                var message = "book with id: " + requests.getTargetId() + " not found";
+                log.warn(message);
+                return ResponseEntity.badRequest().body(failed(message));
+            }
+
+            var authorIsPresentOnBook = book
+                    .get()
+                    .getAuthors()
+                    .stream()
+                    .filter((a) -> a.getId().equals(requests.getTargetId()))
+                    .findFirst()
+                    .isPresent();
+
+            if (!authorIsPresentOnBook) {
+                var message = "author with id: " + requests.getTargetId() + " not found";
+                log.warn(message);
+                return ResponseEntity.badRequest().body(failed(message));
+            }
+
+            book.get().getAuthors().removeIf((a) -> a.getId().equals(requests.getTargetId()));
+            book = this.bookService.update(book.get());
+            return ResponseEntity.ok(success(null));
         } catch (Exception e) {
             log.error("Error: " + e.getMessage());
             return ResponseEntity.internalServerError().body(error(e.getMessage()));
