@@ -33,21 +33,22 @@ public class BookAuthorController {
         }
 
         try {
-            if (!bookService.existsById(bookAuthor.getBookId())) {
+            var book = this.bookService.findById(bookAuthor.getBookId());
+            if (!book.isPresent()) {
                 var message = "book with id: " + bookAuthor.getBookId() + " not found";
                 log.warn(message);
                 return ResponseEntity.badRequest().body(failed(message));
             }
 
-            if (!authorService.existsById(bookAuthor.getAuthorId())) {
+            var author = this.authorService.findById(bookAuthor.getAuthorId());
+            if (!author.isPresent()) {
                 var message = "author with id: " + bookAuthor.getAuthorId() + " not found";
                 log.warn(message);
                 return ResponseEntity.badRequest().body(failed(message));
             }
 
-            var book = this.bookService.findById(bookAuthor.getBookId()).get();
-            book.getAuthors().add(this.authorService.findById(bookAuthor.getAuthorId()).get());
-            book = bookService.update(book).get();
+            book.get().getAuthors().add(author.get());
+            book = bookService.update(book.get());
 
             return ResponseEntity.ok(success(book));
         } catch (Exception e) {
