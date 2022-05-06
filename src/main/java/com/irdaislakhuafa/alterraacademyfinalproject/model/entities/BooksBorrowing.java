@@ -21,11 +21,12 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class BooksBorrowing extends BaseEntity {
+    @ManyToMany
     @JoinColumn(name = "book_id", nullable = false)
     @Builder.Default
     private List<Book> books = new ArrayList<>();
 
-    @ManyToOne(targetEntity = Student.class)
+    @ManyToMany
     @JoinColumn(name = "student_id", nullable = false)
     @Builder.Default
     private List<Student> students = new ArrayList<>();
