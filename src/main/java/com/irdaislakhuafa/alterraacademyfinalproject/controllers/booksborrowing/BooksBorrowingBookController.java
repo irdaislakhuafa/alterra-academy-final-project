@@ -5,7 +5,8 @@ import static com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiResponse.*;
 import javax.validation.Valid;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.booksborrowing.BooksBorrowingBook;
-import com.irdaislakhuafa.alterraacademyfinalproject.services.*;
+import com.irdaislakhuafa.alterraacademyfinalproject.services.BookService;
+import com.irdaislakhuafa.alterraacademyfinalproject.services.BooksBorrowingService;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
 
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,6 @@ public class BooksBorrowingBookController {
     private final BooksBorrowingService booksBorrowingService;
     private final ApiValidation apiValidation;
     private final BookService bookService;
-    private final StudentService studentService;
 
     @PostMapping
     public ResponseEntity<?> add(@RequestBody @Valid BooksBorrowingBook request, Errors errors) {
