@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+
+import org.hibernate.annotations.*;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -14,6 +17,11 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
+@SQLDelete(sql = "UPDATE books SET is_deleted = true WHERE id = ?")
+@FilterDef(name = "deletedBookFilter", parameters = {
+        @ParamDef(name = "isDeleted", type = "boolean")
+})
+@Filter(name = "deletedBookFilter", condition = "is_deleted = :isDeleted")
 public class Book extends BaseEntity {
     @Column(nullable = false, length = 255)
     private String title;
@@ -21,7 +29,7 @@ public class Book extends BaseEntity {
     @Column(nullable = false, length = 1500)
     private String description;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "is_deleted")
     private boolean isDeleted;
 
     @Column(nullable = false)
