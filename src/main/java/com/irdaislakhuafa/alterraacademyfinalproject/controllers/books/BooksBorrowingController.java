@@ -9,6 +9,7 @@ import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.BooksBorrowi
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.utils.BorrowStatus;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiTargetIdRequest;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.booksBorrowing.BooksBorrowingBook;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.booksBorrowing.BooksBorrowingStudent;
 import com.irdaislakhuafa.alterraacademyfinalproject.services.*;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
 
@@ -143,6 +144,37 @@ public class BooksBorrowingController {
             }
 
             booksBorrowing.get().getBooks().add(book.get());
+            booksBorrowing = this.booksBorrowingService.update(booksBorrowing.get());
+            return ResponseEntity.ok(success(booksBorrowing));
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error(e.getMessage()));
+        }
+    }
+
+    @PostMapping(value = { "/add/student" })
+    public ResponseEntity<?> addStudent(@RequestBody @Valid BooksBorrowingStudent request, Errors errors) {
+        if (errors.hasErrors()) {
+            log.error("Validation failed");
+            return ResponseEntity.badRequest().body(validationFailed(apiValidation.getErrorMessages(errors)));
+        }
+
+        try {
+            var booksBorrowing = this.booksBorrowingService.findById(request.getBooksBorrowingId());
+            if (!booksBorrowing.isPresent()) {
+                var message = "books_borrowing with id: " + request.getBooksBorrowingId() + " not found";
+                log.warn(message);
+                return ResponseEntity.badRequest().body(failed(message));
+            }
+
+            var student = this.studentService.findById(request.getStudentId());
+            if (!student.isPresent()) {
+                var message = "student with id: " + request.getStudentId() + " not found";
+                log.warn(message);
+                return ResponseEntity.badRequest().body(failed(message));
+            }
+
+            booksBorrowing.get().getStudents().add(student.get());
             booksBorrowing = this.booksBorrowingService.update(booksBorrowing.get());
             return ResponseEntity.ok(success(booksBorrowing));
         } catch (Exception e) {
