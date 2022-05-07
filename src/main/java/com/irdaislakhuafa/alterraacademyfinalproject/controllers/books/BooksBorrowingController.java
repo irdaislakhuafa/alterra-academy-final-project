@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.BooksBorrowingDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.BooksBorrowing;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.utils.BorrowStatus;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiTargetIdRequest;
 import com.irdaislakhuafa.alterraacademyfinalproject.services.*;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
 
@@ -72,4 +73,26 @@ public class BooksBorrowingController {
         }
     }
 
+    @PutMapping(value = { "/returned" })
+    public ResponseEntity<?> returned(@RequestBody @Valid ApiTargetIdRequest request, Errors errors) {
+        if (errors.hasErrors()) {
+            log.error("Validation failed");
+            return ResponseEntity.badRequest().body(validationFailed(this.apiValidation.getErrorMessages(errors)));
+        }
+        try {
+            var value = this.booksBorrowingService.findById(request.getTargetId());
+            if (!value.isPresent()) {
+                var message = "books_borrowing with id: " + request.getTargetId() + " not found";
+                log.warn(message);
+                return ResponseEntity.badRequest().body(failed(message));
+            }
+
+            value.get().setStatus(BorrowStatus.RETURNED);
+            value = this.booksBorrowingService.update(value.get());
+            return ResponseEntity.ok(success(value));
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error(e.getMessage()));
+        }
+    }
 }
