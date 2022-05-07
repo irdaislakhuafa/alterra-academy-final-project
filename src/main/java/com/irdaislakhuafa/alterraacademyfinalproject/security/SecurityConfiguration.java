@@ -14,7 +14,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
 
-                .antMatchers("/api/v1/docs/swagger-ui/", "/docs/v1").permitAll()
+                .antMatchers(
+                        // swagger
+                        "/api/v1/docs/swagger-ui/",
+                        "/docs/v1",
+
+                        // users
+                        "/api/v1/users/**")
+                .permitAll()
 
                 .anyRequest().fullyAuthenticated()
                 .and().httpBasic()
