@@ -6,7 +6,6 @@ import javax.validation.constraints.*;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.utils.BorrowStatus;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -29,5 +28,5 @@ public class BooksBorrowingDto {
     @NotNull(message = "status cannot be null")
     @NotEmpty(message = "status cannot be empty")
     @NotBlank(message = "status cannot be blank")
-    private BorrowStatus status;
+    private String status;
 }
