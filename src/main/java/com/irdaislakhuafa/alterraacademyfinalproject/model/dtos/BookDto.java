@@ -33,16 +33,20 @@ public class BookDto {
     @NotEmpty(message = "description cannot be empty")
     @NotBlank(message = "description cannot be blank")
     private String description;
-
+    
     @Builder.Default
+    @NotEmpty(message = "author_ids cannot be empty")
     @NotNull(message = "author_ids cannot be null")
-    private List<String> authorIds = new ArrayList<>();
-
+    private List<@NotBlank(message = "category_ids cannot be blank") String> authorIds = new ArrayList<>();
+    
     @Builder.Default
+    @NotEmpty(message = "publisher_ids cannot be empty")
     @NotNull(message = "publisher_ids cannot be null")
-    private List<String> publisherIds = new ArrayList<>();
-
+    private List<@NotBlank(message = "publisher_ids cannot be blank") String> publisherIds = new ArrayList<>();
+    
+    
     @Builder.Default
+    @NotEmpty(message = "category_ids cannot be empty")
     @NotNull(message = "category_ids cannot be null")
-    private List<String> categoryIds = new ArrayList<>();
+    private List<@NotBlank(message = "category_ids cannot be blank") String> categoryIds = new ArrayList<>();
 }

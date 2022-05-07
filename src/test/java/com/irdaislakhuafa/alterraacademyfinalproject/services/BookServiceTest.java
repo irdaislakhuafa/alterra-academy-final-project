@@ -1,30 +1,17 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.SimpleTestNameGenerator;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.BookDto;
-import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Address;
-import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Author;
-import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Book;
-import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Category;
-import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Publisher;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.*;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.BookRepository;
 
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -80,18 +67,15 @@ public class BookServiceTest implements BaseServiceTest {
             .id("bookId")
             .title("book 1")
             .description("-")
-            .authors(List.of(author))
+            .authors(new HashSet<>(List.of(author)))
             .publishedDate(new Date())
-            .categories(List.of(category))
-            .publishers(null)
+            // .categories(List.of(category))
+            // .publishers(List.of(publisher))
             .build();
 
     private final BookDto bookDto = BookDto.builder()
             .title("book 1")
             .description("-")
-            // .authorIds(List.of(author.getId()))
-            // .publisherIds(List.of(publisher.getId()))
-            // .categoryIds(List.of(category.getId()))
             .build();
 
     @Test
@@ -205,6 +189,7 @@ public class BookServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testUpdateSuccess() {
+        when(this.bookRepository.findById(anyString())).thenReturn(Optional.of(book));
         when(this.bookRepository.save(any())).thenReturn(book);
         var result = this.bookService.update(book);
         assertNotNull(result);

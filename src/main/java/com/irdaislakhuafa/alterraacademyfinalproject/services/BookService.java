@@ -2,8 +2,7 @@ package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
 import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -36,6 +35,11 @@ public class BookService implements BaseService<Book, BookDto> {
     @Override
     public Optional<Book> update(Book entity) {
         logUpdate(entity);
+        var book = this.bookRepository.findById(entity.getId());
+
+        if (!book.isPresent()) {
+            throw new NoSuchElementException("Book with id: " + entity.getId() + " not found");
+        }
         var updatedBook = Optional.of(bookRepository.save(entity));
         logSuccessUpdate(entity);
         return updatedBook;
@@ -84,9 +88,9 @@ public class BookService implements BaseService<Book, BookDto> {
         var book = Book.builder()
                 .title(dto.getTitle())
                 .description(dto.getDescription())
-                .authors(this.authorService.findAllById(dto.getAuthorIds()))
-                .publishers(this.publisherService.findAllById(dto.getPublisherIds()))
-                .categories(this.categoryService.findAllById(dto.getCategoryIds()))
+                .authors(new HashSet<>(this.authorService.findAllById(dto.getAuthorIds())))
+                .publishers(new HashSet<>(this.publisherService.findAllById(dto.getPublisherIds())))
+                .categories(new HashSet<>(this.categoryService.findAllById(dto.getCategoryIds())))
                 .build();
         logSuccessMapDtoToEntity(book);
         return book;
