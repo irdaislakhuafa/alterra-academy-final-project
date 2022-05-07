@@ -1,4 +1,4 @@
-package com.irdaislakhuafa.alterraacademyfinalproject.controllers.books;
+package com.irdaislakhuafa.alterraacademyfinalproject.controllers.booksborrowing;
 
 import static com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiResponse.*;
 
@@ -8,8 +8,8 @@ import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.BooksBorrowingDt
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.BooksBorrowing;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.utils.BorrowStatus;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiTargetIdRequest;
-import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.booksBorrowing.BooksBorrowingBook;
-import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.booksBorrowing.BooksBorrowingStudent;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.booksborrowing.BooksBorrowingBook;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.booksborrowing.BooksBorrowingStudent;
 import com.irdaislakhuafa.alterraacademyfinalproject.services.*;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
 
