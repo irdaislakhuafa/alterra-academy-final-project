@@ -20,12 +20,10 @@ import lombok.experimental.SuperBuilder;
 public class BooksBorrowingDto {
     @NotNull(message = "books_ids[] cannot be null")
     @NotEmpty(message = "books_ids[] cannot be empty")
-    @NotBlank(message = "books_ids[] cannot be blank")
     private List<@NotNull(message = "books_ids cannot be null") @NotEmpty(message = "books_ids cannot be empty") @NotBlank(message = "books_ids cannot be blank") String> booksIds;
 
     @NotNull(message = "students_ids cannot be null")
     @NotEmpty(message = "students_ids cannot be empty")
-    @NotBlank(message = "students_ids cannot be blank")
     private List<@NotNull(message = "students_ids cannot be null") @NotEmpty(message = "students_ids cannot be empty") @NotBlank(message = "students_ids cannot be blank") String> studentsIds;
 
     @NotNull(message = "status cannot be null")
