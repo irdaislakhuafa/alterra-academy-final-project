@@ -30,6 +30,12 @@ public class UserController {
         }
 
         try {
+            var userIsExist = this.userService.findByEmail(request.getEmail()).isPresent();
+            if (userIsExist) {
+                var message = "user with email: " + request.getEmail() + " already exists";
+                return ResponseEntity.badRequest().body(failed(message));
+            }
+
             var user = this.userService.mapToEntity(request);
             user = this.userService.save(user).get();
             return ResponseEntity.ok(success(user));

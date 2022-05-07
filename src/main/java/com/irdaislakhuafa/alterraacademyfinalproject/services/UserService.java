@@ -93,4 +93,8 @@ public class UserService implements UserDetailsService, BaseService<User, UserDt
                 });
     }
 
+    public Optional<User> findByEmail(String email) {
+        return this.userRepository.findByEmailEqualsIgnoreCase(email);
+    }
+
 }
