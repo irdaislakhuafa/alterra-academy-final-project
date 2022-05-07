@@ -95,4 +95,27 @@ public class BooksBorrowingController {
             return ResponseEntity.internalServerError().body(error(e.getMessage()));
         }
     }
+
+    @PutMapping(value = { "/borrowed" })
+    public ResponseEntity<?> borrowed(@RequestBody @Valid ApiTargetIdRequest request, Errors errors) {
+        if (errors.hasErrors()) {
+            log.error("Validation failed");
+            return ResponseEntity.badRequest().body(validationFailed(this.apiValidation.getErrorMessages(errors)));
+        }
+        try {
+            var value = this.booksBorrowingService.findById(request.getTargetId());
+            if (!value.isPresent()) {
+                var message = "books_borrowing with id: " + request.getTargetId() + " not found";
+                log.warn(message);
+                return ResponseEntity.badRequest().body(failed(message));
+            }
+
+            value.get().setStatus(BorrowStatus.BORROWED);
+            value = this.booksBorrowingService.update(value.get());
+            return ResponseEntity.ok(success(value));
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error(e.getMessage()));
+        }
+    }
 }
