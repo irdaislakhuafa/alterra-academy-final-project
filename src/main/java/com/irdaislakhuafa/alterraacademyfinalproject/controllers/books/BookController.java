@@ -45,10 +45,10 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<?> findAll() {
+    public ResponseEntity<?> findAll(@RequestParam(name = "showDeleted", defaultValue = "false") boolean showDeleted) {
         try {
             log.info("Request find all books");
-            var response = success(this.bookService.findAll());
+            var response = success(this.bookService.findAll(showDeleted));
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             log.error("Error: " + e.getMessage());

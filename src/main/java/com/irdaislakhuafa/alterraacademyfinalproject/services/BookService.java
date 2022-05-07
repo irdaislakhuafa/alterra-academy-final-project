@@ -5,12 +5,14 @@ import static com.irdaislakhuafa.alterraacademyfinalproject.utils.LogMessage.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.BookDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Book;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.BookRepository;
 
+import org.hibernate.Session;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class BookService implements BaseService<Book, BookDto> {
     private final AuthorService authorService;
     private final PublisherService publisherService;
     private final CategoryService categoryService;
+    private final EntityManager entityManager;
 
     @Override
     public Optional<Book> save(Book entity) {
@@ -62,8 +65,18 @@ public class BookService implements BaseService<Book, BookDto> {
     public List<Book> findAll() {
         logFindAll(new Book());
         var allBook = bookRepository.findAll();
-        logFindAll(new Book());
+        logSuccessFindAll(new Book());
         return allBook;
+    }
+
+    public List<Book> findAll(boolean status) {
+        logFindAll(new Book());
+        var session = entityManager.unwrap(Session.class);
+        session.enableFilter("deletedBookFilter").setParameter("isDeleted", status);
+        var books = this.bookRepository.findAll();
+        session.disableFilter("deletedBookFilter");
+        logSuccessFindAll(new Book());
+        return books;
     }
 
     @Override
