@@ -1,22 +1,11 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.model.entities;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import javax.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Entity(name = "books")
@@ -47,15 +36,15 @@ public class Book extends BaseEntity {
     @ManyToMany
     @JoinColumn(nullable = false)
     @Builder.Default
-    private List<Author> authors = new ArrayList<>();
+    private Set<Author> authors = new HashSet<>();
 
     @ManyToMany
     @Builder.Default
-    private List<Publisher> publishers = new ArrayList<>();
+    private Set<Publisher> publishers = new HashSet<>();
 
     @ManyToMany
     @Builder.Default
-    private List<Category> categories = new ArrayList<>();
+    private Set<Category> categories = new HashSet<>();
 
     @PrePersist
     public void onInsert() {

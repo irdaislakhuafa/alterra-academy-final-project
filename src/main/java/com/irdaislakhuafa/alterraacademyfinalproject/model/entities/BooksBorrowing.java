@@ -4,24 +4,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.utils.BorrowStatus;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Entity(name = "books_borrowing")
@@ -32,12 +21,12 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class BooksBorrowing extends BaseEntity {
-    @ManyToOne(cascade = { CascadeType.ALL }, targetEntity = Book.class)
+    @ManyToMany
     @JoinColumn(name = "book_id", nullable = false)
     @Builder.Default
     private List<Book> books = new ArrayList<>();
 
-    @ManyToOne(targetEntity = Student.class)
+    @ManyToMany
     @JoinColumn(name = "student_id", nullable = false)
     @Builder.Default
     private List<Student> students = new ArrayList<>();
