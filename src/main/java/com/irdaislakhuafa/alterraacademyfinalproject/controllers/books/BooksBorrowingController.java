@@ -40,7 +40,7 @@ public class BooksBorrowingController {
     }
 
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody @Valid BooksBorrowingDto request, Errors errors) {
+    public ResponseEntity<?> save(@RequestBody @Valid BooksBorrowingDto request, Errors errors) {
         if (errors.hasErrors()) {
             log.error("Error validation");
             return ResponseEntity.badRequest().body(validationFailed(apiValidation.getErrorMessages(errors)));
@@ -118,4 +118,5 @@ public class BooksBorrowingController {
             return ResponseEntity.internalServerError().body(error(e.getMessage()));
         }
     }
+
 }
