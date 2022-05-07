@@ -1,9 +1,13 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.model.entities;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.persistence.*;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -14,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class User extends BaseEntity {
+public class User extends BaseEntity implements UserDetails {
     @Column(length = 100, nullable = false)
     private String name;
 
@@ -31,4 +35,34 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     @Builder.Default
     private boolean isEnable = true;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles.stream().map((v) -> new SimpleGrantedAuthority(v.getName())).collect(Collectors.toList());
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return this.isEnable;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return this.isEnable;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return this.isEnable;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.isEnable;
+    }
 }

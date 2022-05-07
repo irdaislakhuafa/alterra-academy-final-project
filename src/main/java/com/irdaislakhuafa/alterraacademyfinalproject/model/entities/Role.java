@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Role {
+public class Role extends BaseEntity {
     private String name;
     private String description;
 }
