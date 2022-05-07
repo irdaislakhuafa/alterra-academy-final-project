@@ -26,7 +26,7 @@ public class BooksBorrowingStudentController {
     private final StudentService studentService;
 
     @PostMapping
-    public ResponseEntity<?> addStudent(@RequestBody @Valid BooksBorrowingStudent request, Errors errors) {
+    public ResponseEntity<?> add(@RequestBody @Valid BooksBorrowingStudent request, Errors errors) {
         if (errors.hasErrors()) {
             log.error("Validation failed");
             return ResponseEntity.badRequest().body(validationFailed(apiValidation.getErrorMessages(errors)));

@@ -26,7 +26,7 @@ public class BooksBorrowingBookController {
     private final StudentService studentService;
 
     @PostMapping
-    public ResponseEntity<?> addBook(@RequestBody @Valid BooksBorrowingBook request, Errors errors) {
+    public ResponseEntity<?> add(@RequestBody @Valid BooksBorrowingBook request, Errors errors) {
         if (errors.hasErrors()) {
             log.error("Validation failed");
             return ResponseEntity.badRequest().body(validationFailed(apiValidation.getErrorMessages(errors)));
@@ -48,6 +48,37 @@ public class BooksBorrowingBookController {
             }
 
             booksBorrowing.get().getBooks().add(book.get());
+            booksBorrowing = this.booksBorrowingService.update(booksBorrowing.get());
+            return ResponseEntity.ok(success(booksBorrowing));
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error(e.getMessage()));
+        }
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> delete(@RequestBody @Valid BooksBorrowingBook request, Errors errors) {
+        if (errors.hasErrors()) {
+            log.error("Validation failed");
+            return ResponseEntity.badRequest().body(validationFailed(apiValidation.getErrorMessages(errors)));
+        }
+
+        try {
+            var booksBorrowing = this.booksBorrowingService.findById(request.getBooksBorrowingId());
+            if (!booksBorrowing.isPresent()) {
+                var message = "books_borrowing with id: " + request.getBooksBorrowingId() + " not found";
+                log.warn(message);
+                return ResponseEntity.badRequest().body(failed(message));
+            }
+
+            var book = this.bookService.findById(request.getBookId());
+            if (!book.isPresent()) {
+                var message = "book with id: " + request.getBookId() + " not found";
+                log.warn(message);
+                return ResponseEntity.badRequest().body(failed(message));
+            }
+
+            booksBorrowing.get().getBooks().removeIf((v) -> v.getId().equals(request.getBookId()));
             booksBorrowing = this.booksBorrowingService.update(booksBorrowing.get());
             return ResponseEntity.ok(success(booksBorrowing));
         } catch (Exception e) {
