@@ -21,7 +21,7 @@ public class SwaggerDocsConfiguration {
                                 .apis(RequestHandlerSelectors
                                                 .basePackage(AlterraAcademyFinalProjectApplication.class
                                                                 .getPackageName() + ".controllers"))
-                                .paths(PathSelectors.any())
+                                .paths(PathSelectors.regex("/api/v1.*"))
                                 .build()
                                 .apiInfo(new ApiInfoBuilder()
                                                 .title("School Library API Docs")
