@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.BooksBorrowingDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.BooksBorrowing;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.utils.BorrowStatus;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.BooksBorrowingRepository;
 
 import org.springframework.stereotype.Service;
@@ -82,7 +83,7 @@ public class BooksBorrowingService implements BaseService<BooksBorrowing, BooksB
         final BooksBorrowing tempValue = BooksBorrowing.builder().build();
         logMapDtoToEntity(tempValue);
         var value = BooksBorrowing.builder()
-                .status(dto.getStatus())
+                .status(BorrowStatus.valueOf(dto.getStatus()))
                 .books(this.bookService.findAllById(dto.getBooksIds()))
                 .students(this.studentService.findAllById(dto.getStudentsIds()))
                 .build();
