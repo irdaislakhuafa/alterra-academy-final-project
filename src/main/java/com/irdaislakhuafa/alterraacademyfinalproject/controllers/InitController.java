@@ -9,4 +9,9 @@ public class InitController {
     public String initRedirect() {
         return "redirect:/api/v1/hello-world";
     }
+
+    @RequestMapping(value = { "/docs/v1" })
+    public String docs() {
+        return "redirect:/api/v1/docs/swagger-ui/";
+    }
 }
