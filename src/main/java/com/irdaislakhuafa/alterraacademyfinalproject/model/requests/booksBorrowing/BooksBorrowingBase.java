@@ -1,4 +1,4 @@
-package com.irdaislakhuafa.alterraacademyfinalproject.model.requests.booksBorrowing;
+package com.irdaislakhuafa.alterraacademyfinalproject.model.requests.booksborrowing;
 
 import javax.validation.constraints.*;
 
