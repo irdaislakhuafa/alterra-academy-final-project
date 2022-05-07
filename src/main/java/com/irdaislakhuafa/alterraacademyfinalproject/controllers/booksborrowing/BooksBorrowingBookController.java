@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping(value = { "/books/borrowing/book" })
+@RequestMapping(value = { "/api/v1/books/borrowing/book" })
 @RequiredArgsConstructor
 public class BooksBorrowingBookController {
     private final BooksBorrowingService booksBorrowingService;
