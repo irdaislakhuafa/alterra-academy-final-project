@@ -44,4 +44,15 @@ public class UserController {
             return ResponseEntity.internalServerError().body(error(e.getMessage()));
         }
     }
+
+    @GetMapping
+    public ResponseEntity<?> findAll() {
+        try {
+            var users = this.userService.findAll();
+            return ResponseEntity.ok(success(users));
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error(e.getMessage()));
+        }
+    }
 }
