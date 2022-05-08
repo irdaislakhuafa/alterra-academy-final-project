@@ -51,6 +51,16 @@ public class UserController {
 
     @PostMapping(value = { "/auth" })
     public ResponseEntity<?> auth(@RequestBody @Valid UserAuthRequest request, Errors errors) {
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(validationFailed(apiValidation.getErrorMessages(errors)));
+        }
+
+        try {
+
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error(e.getMessage()));
+        }
         return null;
     }
 
