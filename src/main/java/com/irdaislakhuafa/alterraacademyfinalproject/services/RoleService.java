@@ -56,7 +56,7 @@ public class RoleService implements BaseService<Role, RoleDto> {
     @Override
     public Role mapToEntity(RoleDto dto) {
         return Role.builder()
-                .name(dto.getName())
+                .name(dto.getName().toUpperCase())
                 .description(dto.getDescription())
                 .build();
     }

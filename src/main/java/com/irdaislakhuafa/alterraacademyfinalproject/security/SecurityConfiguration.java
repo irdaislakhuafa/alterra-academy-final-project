@@ -20,7 +20,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/docs/v1",
 
                         // users
-                        "/api/v1/users/**")
+                        "/api/v1/users/**",
+
+                        // roles
+                        "/api/v1/roles/**")
                 .permitAll()
 
                 .anyRequest().fullyAuthenticated()
