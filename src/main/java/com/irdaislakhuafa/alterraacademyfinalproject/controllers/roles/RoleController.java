@@ -2,10 +2,13 @@ package com.irdaislakhuafa.alterraacademyfinalproject.controllers.roles;
 
 import static com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiResponse.*;
 
+import java.util.NoSuchElementException;
+
 import javax.validation.Valid;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.RoleDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiChangeRequests;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiTargetIdRequest;
 import com.irdaislakhuafa.alterraacademyfinalproject.services.RoleService;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
 
@@ -66,6 +69,23 @@ public class RoleController {
             role.setId(request.getTargetId());
             role = this.roleService.update(role).get();
             return ResponseEntity.ok(success(role));
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error(e.getMessage()));
+        }
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteById(@RequestBody @Valid ApiTargetIdRequest request, Errors errors) {
+        if (errors.hasErrors()) {
+            return ResponseEntity.ok(validationFailed(apiValidation.getErrorMessages(errors)));
+        }
+
+        try {
+            this.roleService.deleteById(request.getTargetId());
+            return ResponseEntity.ok(success(null));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.badRequest().body(failed(e.getMessage()));
         } catch (Exception e) {
             log.error("Error: " + e.getMessage());
             return ResponseEntity.internalServerError().body(error(e.getMessage()));
