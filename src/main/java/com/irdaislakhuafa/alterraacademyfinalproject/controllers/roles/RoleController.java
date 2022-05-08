@@ -91,4 +91,21 @@ public class RoleController {
             return ResponseEntity.internalServerError().body(error(e.getMessage()));
         }
     }
+
+    @GetMapping(value = { "/findBy/id" })
+    public ResponseEntity<?> findById(@RequestBody @Valid ApiTargetIdRequest request, Errors errors) {
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(validationFailed(apiValidation.getErrorMessages(errors)));
+        }
+
+        try {
+            var role = this.roleService.findById(request.getTargetId());
+            var messageNotFound = "role with id: " + request.getTargetId() + " not found";
+            return (role.isPresent()) ? ResponseEntity.ok(success(role))
+                    : ResponseEntity.badRequest().body(failed(messageNotFound));
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error(e.getMessage()));
+        }
+    }
 }
