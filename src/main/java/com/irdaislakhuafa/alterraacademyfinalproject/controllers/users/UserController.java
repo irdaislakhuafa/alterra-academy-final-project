@@ -1,15 +1,16 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.controllers.users;
 
+import static com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiResponse.*;
+
+import java.util.NoSuchElementException;
+
 import javax.validation.Valid;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.UserDto;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiTargetIdRequest;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.users.UserAuthRequest;
 import com.irdaislakhuafa.alterraacademyfinalproject.services.UserService;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
-
-import static com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiResponse.*;
-
-import java.util.NoSuchElementException;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -46,6 +47,11 @@ public class UserController {
             log.error("Error: " + e.getMessage());
             return ResponseEntity.internalServerError().body(error(e.getMessage()));
         }
+    }
+
+    @PostMapping(value = { "/auth" })
+    public ResponseEntity<?> auth(@RequestBody @Valid UserAuthRequest request, Errors errors) {
+        return null;
     }
 
     @GetMapping
