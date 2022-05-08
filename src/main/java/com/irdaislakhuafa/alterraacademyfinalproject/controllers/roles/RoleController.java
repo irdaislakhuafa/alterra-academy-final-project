@@ -62,11 +62,13 @@ public class RoleController {
         }
 
         try {
-
+            var role = this.roleService.mapToEntity(request.getData());
+            role.setId(request.getTargetId());
+            role = this.roleService.update(role).get();
+            return ResponseEntity.ok(success(role));
         } catch (Exception e) {
             log.error("Error: " + e.getMessage());
             return ResponseEntity.internalServerError().body(error(e.getMessage()));
         }
-        return null;
     }
 }
