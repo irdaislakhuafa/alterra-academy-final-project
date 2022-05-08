@@ -3,10 +3,13 @@ package com.irdaislakhuafa.alterraacademyfinalproject.controllers.users;
 import javax.validation.Valid;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.UserDto;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiTargetIdRequest;
 import com.irdaislakhuafa.alterraacademyfinalproject.services.UserService;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
 
 import static com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiResponse.*;
+
+import java.util.NoSuchElementException;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -55,4 +58,22 @@ public class UserController {
             return ResponseEntity.internalServerError().body(error(e.getMessage()));
         }
     }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteById(@RequestBody @Valid ApiTargetIdRequest request, Errors errors) {
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(validationFailed(apiValidation.getErrorMessages(errors)));
+        }
+
+        try {
+            this.userService.deleteById(request.getTargetId());
+            return ResponseEntity.ok(success(null));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.badRequest().body(failed(e.getMessage()));
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error(e.getMessage()));
+        }
+    }
+
 }

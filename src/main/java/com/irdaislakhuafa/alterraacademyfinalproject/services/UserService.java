@@ -49,6 +49,7 @@ public class UserService implements UserDetailsService, BaseService<User, UserDt
         if (!this.existsById(id)) {
             throw new NoSuchElementException("user with id: " + id + " not found");
         }
+        this.userRepository.deleteById(id);
         return true;
     }
 
