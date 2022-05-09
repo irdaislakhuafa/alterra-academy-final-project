@@ -1,6 +1,16 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.services;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
+import java.util.*;
+
 import com.irdaislakhuafa.alterraacademyfinalproject.SimpleTestNameGenerator;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.BooksBorrowingDto;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.*;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.utils.BorrowStatus;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.repositories.BooksBorrowingRepository;
 
 import org.junit.jupiter.api.*;
@@ -18,99 +28,131 @@ public class BookBorrowingServiceTest implements BaseServiceTest {
     @Autowired
     private BooksBorrowingService booksBorrowingService;
 
+    private final BooksBorrowing booksBorrowing = BooksBorrowing.builder()
+            .books(List.of(new Book()))
+            .students(List.of(new Student()))
+            .borrowedOn(LocalDateTime.now())
+            .returnedOn(null)
+            .status(BorrowStatus.BORROWED)
+            .build();
+    private final BooksBorrowingDto booksBorrowingDto = BooksBorrowingDto.builder()
+            .booksIds(List.of("book"))
+            .studentsIds(List.of("student"))
+            .status(BorrowStatus.BORROWED.name())
+            .build();
+
+    @Test
     @Override
     public void testSaveSuccess() {
-        // TODO Auto-generated method stub
-
+        when(this.booksBorrowingRepository.save(any())).thenReturn(booksBorrowing);
+        var result = this.booksBorrowingService.save(booksBorrowing);
+        assertTrue(result.isPresent());
     }
 
+    @Test
     @Override
     public void testSaveFailed() {
-        // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testFindByIdSuccess() {
-        // TODO Auto-generated method stub
-
+        when(this.booksBorrowingRepository.findById(any())).thenReturn(Optional.of(booksBorrowing));
+        var result = this.booksBorrowingService.findById("id");
+        assertTrue(result.isPresent());
     }
 
+    @Test
     @Override
     public void testFindByIdFailed() {
-        // TODO Auto-generated method stub
-
+        when(this.booksBorrowingRepository.findById(any())).thenReturn(Optional.empty());
+        var result = this.booksBorrowingService.findById("id");
+        assertTrue(!result.isPresent());
     }
 
+    @Test
     @Override
     public void testDeleteByIdSuccess() {
-        // TODO Auto-generated method stub
-
+        when(this.booksBorrowingRepository.existsById(anyString())).thenReturn(true);
+        var result = this.booksBorrowingService.deleteById("id");
+        assertTrue(result);
     }
 
+    @Test
     @Override
     public void testDeleteByIdFailed() {
-        // TODO Auto-generated method stub
-
+        when(this.booksBorrowingRepository.existsById(anyString())).thenReturn(false);
+        assertThrows(NoSuchElementException.class, () -> this.booksBorrowingService.deleteById("id"));
     }
 
+    @Test
     @Override
     public void testFindAllSuccess() {
-        // TODO Auto-generated method stub
-
+        when(this.booksBorrowingRepository.findAll()).thenReturn(List.of(booksBorrowing));
+        var result = this.booksBorrowingService.findAll();
+        assertTrue(result.size() == 1);
     }
 
+    @Test
     @Override
     public void testMapToEntitySuccess() {
-        // TODO Auto-generated method stub
-
+        var result = this.booksBorrowingService.mapToEntity(booksBorrowingDto);
+        assertEquals(BorrowStatus.BORROWED, result.getStatus());
     }
 
+    @Test
     @Override
     public void testMapToEntityFailed() {
-        // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testMapToEntitiesSuccess() {
-        // TODO Auto-generated method stub
-
+        var result = this.booksBorrowingService.mapToEntities(List.of(booksBorrowingDto));
+        assertEquals(BorrowStatus.BORROWED, result.get(0).getStatus());
     }
 
+    @Test
     @Override
     public void testMapToEntitiesFailed() {
-        // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testSaveAllSuccess() {
-        // TODO Auto-generated method stub
-
+        when(this.booksBorrowingRepository.saveAll(anyList())).thenReturn(List.of(booksBorrowing));
+        var result = this.booksBorrowingService.saveAll(List.of(booksBorrowing));
+        assertTrue(result.size() == 1);
     }
 
+    @Test
     @Override
     public void testSaveAllFailed() {
-        // TODO Auto-generated method stub
 
     }
 
+    @Test
     @Override
     public void testFindAllByIdSuccess() {
-        // TODO Auto-generated method stub
-
+        when(this.booksBorrowingRepository.findAllById(anyList())).thenReturn(List.of(booksBorrowing));
+        var result = this.booksBorrowingService.findAllById(List.of("booksBorrowing"));
+        assertTrue(result.size() == 1);
     }
 
+    @Test
     @Override
     public void testUpdateSuccess() {
-        // TODO Auto-generated method stub
-
+        when(this.booksBorrowingRepository.save(any())).thenReturn(booksBorrowing);
+        var result = this.booksBorrowingService.update(booksBorrowing);
+        assertTrue(result.isPresent());
     }
 
+    @Test
     @Override
     public void testUpdateFailed() {
-        // TODO Auto-generated method stub
 
     }
 }
