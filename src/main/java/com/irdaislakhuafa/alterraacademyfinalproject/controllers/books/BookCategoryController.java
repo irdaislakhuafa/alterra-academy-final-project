@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping(value = { "/books/categories" })
+@RequestMapping(value = { "/api/v1/books/categories" })
 @RequiredArgsConstructor
 public class BookCategoryController {
     private final ApiValidation apiValidation;
