@@ -153,6 +153,5 @@ public class BookBorrowingServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testUpdateFailed() {
-
     }
 }
