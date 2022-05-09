@@ -43,7 +43,7 @@ public class JwtUtility {
     }
 
     public boolean isTokenExpired(String token) {
-        return this.getParticularClaimFromToken(token, Claims::getIssuedAt).before(new Date());
+        return this.getParticularClaimFromToken(token, Claims::getExpiration).before(new Date());
     }
 
     public boolean isTokenValid(String token, User user) {

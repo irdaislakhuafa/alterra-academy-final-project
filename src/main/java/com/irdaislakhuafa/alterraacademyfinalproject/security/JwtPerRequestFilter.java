@@ -38,7 +38,7 @@ public class JwtPerRequestFilter extends OncePerRequestFilter {
         log.info("Get " + JwtConstantVariables.AUTHORIZATION + " from header");
         final String authorization = request.getHeader(JwtConstantVariables.AUTHORIZATION);
 
-        log.info("Checking authorizarion");
+        log.info("Checking authorizarion \"" + authorization + "\"");
         if (authorization != null && authorization.startsWith(JwtConstantVariables.BEARER)) {
             log.info("Success get " + JwtConstantVariables.AUTHORIZATION + " from header");
             final String token = authorization.substring(JwtConstantVariables.BEARER.length()).trim();

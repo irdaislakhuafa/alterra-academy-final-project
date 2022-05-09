@@ -28,7 +28,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(length = 100, nullable = false, unique = true)
     private String email;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @Builder.Default
     private Set<Role> roles = new HashSet<>();
 

@@ -11,7 +11,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -22,14 +24,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private JwtPerRequestFilter jwtPerRequestFilter;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // start
         http
                 .csrf().disable()
-
                 .authorizeRequests()
 
+                // permit url
                 .antMatchers(
                         // swagger
                         "/api/v1/docs/swagger-ui/",
@@ -42,11 +47,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/api/v1/roles/**")
                 .permitAll()
 
-                .anyRequest().fullyAuthenticated()
-                .and().httpBasic()
+                .anyRequest().authenticated()
+
+                // disable session
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+        // enable jwt filter
+        // .and().addFilterBefore(jwtPerRequestFilter,
+        // UsernamePasswordAuthenticationFilter.class)
         // end
         ;
+        http.addFilterBefore(jwtPerRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
     }
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
