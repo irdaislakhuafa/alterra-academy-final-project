@@ -120,7 +120,8 @@
 						<exclude>**/configuration/**</exclude>
 						<exclude>**/model/**</exclude>
 						<exclude>**/alterraacademyfinalproject/*.class</exclude>
-						<exclude>**/alterraacademyfinalproject/controllers/InitController.class</exclude>
+						<exclude>**/alterraacademyfinalproject/controllers/**</exclude>
+						<exclude>**/alterraacademyfinalproject/security/**</exclude>
 					</excludes>
 				</configuration>
 
