@@ -76,4 +76,31 @@ public class UserRolesController {
             return ResponseEntity.internalServerError().body(error(e.getMessage()));
         }
     }
+
+    @DeleteMapping
+    public ResponseEntity<?> removeRoles(@RequestBody @Valid ApiChangeRequests<List<String>> requests, Errors errors) {
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(validationFailed(apiValidation.getErrorMessages(errors)));
+        }
+
+        try {
+            var roles = this.roleService.findByNames(requests.getData().toArray(new String[requests.getData().size()]));
+            var user = this.userService.findById(requests.getTargetId());
+
+            if (!user.isPresent()) {
+                var message = "user with id: " + requests.getTargetId() + " not found";
+                log.warn(message);
+                return ResponseEntity.badRequest().body(failed(message));
+            }
+
+            user.get().getRoles().removeAll(roles);
+            user = this.userService.update(user.get());
+            return ResponseEntity.ok(success(user));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.badRequest().body(failed(e.getMessage()));
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error(e.getMessage()));
+        }
+    }
 }
