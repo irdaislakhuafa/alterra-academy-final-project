@@ -3,6 +3,7 @@ package com.irdaislakhuafa.alterraacademyfinalproject.security;
 import com.irdaislakhuafa.alterraacademyfinalproject.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Value(value = "{app.base.url}")
+    private String BASE_URL;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
@@ -36,17 +39,38 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 // permit url
                 .antMatchers(
+                        // init
+                        "/",
+                        BASE_URL + "/hello-world",
                         // swagger
-                        "/api/v1/docs/**",
+                        BASE_URL + "/docs/**",
                         "/docs/v1",
                         "/v2/**",
 
                         // users
-                        "/api/v1/users/**",
+                        BASE_URL + "/users/register",
+                        BASE_URL + "/users/auth",
 
                         // roles
-                        "/api/v1/roles/**")
+                        BASE_URL + "/roles/**")
                 .permitAll()
+
+                // admin
+                .antMatchers(
+                        // authors
+                        BASE_URL + "/authors",
+                        BASE_URL + "/authors/",
+
+                        // users
+                        BASE_URL + "/users",
+                        BASE_URL + "/users/")
+                .hasAnyAuthority("ROLE_ADMIN")
+
+                // user
+                .antMatchers(
+                        // authors
+                        BASE_URL + "/authors/findBy/**")
+                .hasAnyAuthority("ROLE_USER")
 
                 .anyRequest().authenticated()
 
