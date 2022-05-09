@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Value(value = "{app.base.url}")
+    @Value(value = "${app.base.url}")
     private String BASE_URL;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -42,6 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         // init
                         "/",
                         BASE_URL + "/hello-world",
+
                         // swagger
                         BASE_URL + "/docs/**",
                         "/docs/v1",
@@ -77,13 +78,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // disable session
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-        // enable jwt filter
+                // enable jwt filter
                 .and().addFilterBefore(jwtPerRequestFilter, UsernamePasswordAuthenticationFilter.class)
         // end
         ;
 
     }
-
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
