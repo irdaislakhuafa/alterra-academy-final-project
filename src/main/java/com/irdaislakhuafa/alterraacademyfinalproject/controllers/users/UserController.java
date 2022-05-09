@@ -108,4 +108,24 @@ public class UserController {
         }
     }
 
+    @GetMapping(value = { "/findBy/id" })
+    public ResponseEntity<?> findById(@RequestBody @Valid ApiTargetIdRequest request, Errors errors) {
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(validationFailed(apiValidation.getErrorMessages(errors)));
+        }
+
+        try {
+            var user = this.userService.findById(request.getTargetId());
+            if (!user.isPresent()) {
+                var message = "user with id: " + request.getTargetId() + " not found";
+                log.warn(message);
+                return ResponseEntity.badRequest().body(failed(message));
+            }
+
+            return ResponseEntity.ok(success(user));
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error(e.getMessage()));
+        }
+    }
 }
