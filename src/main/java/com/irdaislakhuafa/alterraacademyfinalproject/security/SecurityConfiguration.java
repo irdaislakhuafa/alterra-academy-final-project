@@ -37,8 +37,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // permit url
                 .antMatchers(
                         // swagger
-                        "/api/v1/docs/swagger-ui/",
+                        "/api/v1/docs/**",
                         "/docs/v1",
+                        "/v2/**",
 
                         // users
                         "/api/v1/users/**",
@@ -53,11 +54,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
         // enable jwt filter
-        // .and().addFilterBefore(jwtPerRequestFilter,
-        // UsernamePasswordAuthenticationFilter.class)
+                .and().addFilterBefore(jwtPerRequestFilter, UsernamePasswordAuthenticationFilter.class)
         // end
         ;
-        http.addFilterBefore(jwtPerRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
     }
 
