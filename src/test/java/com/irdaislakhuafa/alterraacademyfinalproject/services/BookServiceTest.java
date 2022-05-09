@@ -25,15 +25,6 @@ public class BookServiceTest implements BaseServiceTest {
     @MockBean
     private BookRepository bookRepository;
 
-    // @MockBean
-    // private AuthorService authorService;
-
-    // @MockBean
-    // private PublisherService publisherService;
-
-    // @MockBean
-    // private CategoryService categoryService;
-
     @Autowired
     private BookService bookService;
 
@@ -129,9 +120,13 @@ public class BookServiceTest implements BaseServiceTest {
     @Override
     public void testFindAllSuccess() {
         when(this.bookRepository.findAll()).thenReturn(List.of(book));
-        var result = this.bookService.findAll();
-        assertNotNull(result);
-        assertEquals(1, result.size());
+        var result1 = this.bookService.findAll();
+        assertNotNull(result1);
+        assertEquals(1, result1.size());
+
+        var result2 = this.bookService.findAll(true);
+        assertNotNull(result2);
+        assertEquals(1, result2.size());
 
     }
 
@@ -199,6 +194,9 @@ public class BookServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testUpdateFailed() {
+        when(this.bookRepository.findById(anyString())).thenReturn(Optional.empty());
+        when(this.bookRepository.save(any())).thenReturn(book);
+        assertThrows(NoSuchElementException.class, () -> this.bookService.update(book));
 
     }
 
