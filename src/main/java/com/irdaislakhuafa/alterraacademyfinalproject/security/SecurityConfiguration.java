@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -30,6 +31,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtPerRequestFilter jwtPerRequestFilter;
 
+    private final String ADMIN = "ROLE_ADMIN";
+    private final String USER = "ROLE_USER";
+    private final String AUTHOR = "ROLE_AUTHOR";
+    private final String PUBLISHER = "PUBLISHER";
+    private final String STUDENT = "STUDENT";
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // start
@@ -37,7 +44,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
 
-                // permit url
+                // swagger docs and init (PermitAll)
                 .antMatchers(
                         // init
                         "/",
@@ -46,15 +53,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         // swagger
                         BASE_URL + "/docs/**",
                         "/docs/v1",
-                        "/v2/**",
-
-                        // users
-                        BASE_URL + "/users/register",
-                        BASE_URL + "/users/auth",
-
-                        // roles
-                        BASE_URL + "/roles/**")
+                        "/v2/**")
                 .permitAll()
+
+                // author address (PermitAll)
+                .antMatchers(
+                        HttpMethod.GET,
+                        BASE_URL + "/authors/address")
+                .permitAll()
+                // author address PUT/POST/DELETE
+                .antMatchers(
+                        HttpMethod.PUT,
+                        BASE_URL + "/authors/address",
+                        BASE_URL + "/authors/address/")
+                .hasAnyAuthority(ADMIN)
 
                 // admin
                 .antMatchers(
@@ -65,13 +77,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         // users
                         BASE_URL + "/users",
                         BASE_URL + "/users/")
-                .hasAnyAuthority("ROLE_ADMIN")
+                .hasAnyAuthority(ADMIN)
 
-                // user
+                // roles PUT/POST/DELETE (admin)
+                .antMatchers(HttpMethod.POST, BASE_URL + "/roles/").hasAnyAuthority(ADMIN)
+                .antMatchers(HttpMethod.PUT, BASE_URL + "/roles/").hasAnyAuthority(ADMIN)
+                .antMatchers(HttpMethod.DELETE, BASE_URL + "/roles/").hasAnyAuthority(ADMIN)
+                // roles GET
+                .antMatchers(HttpMethod.GET, BASE_URL + "/roles/**").permitAll()
+
+                // user (PermitAll)
                 .antMatchers(
-                        // authors
-                        BASE_URL + "/authors/findBy/**")
-                .hasAnyAuthority("ROLE_USER")
+                        BASE_URL + "/users/register",
+                        BASE_URL + "/users/auth")
+                .permitAll()
 
                 .anyRequest().authenticated()
 
