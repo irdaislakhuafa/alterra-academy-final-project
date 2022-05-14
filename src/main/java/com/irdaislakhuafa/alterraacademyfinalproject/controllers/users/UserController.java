@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 import javax.validation.Valid;
 
 import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.UserDto;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiChangeRequests;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.ApiTargetIdRequest;
 import com.irdaislakhuafa.alterraacademyfinalproject.model.requests.users.UserAuthRequest;
 import com.irdaislakhuafa.alterraacademyfinalproject.security.JwtUtility;
@@ -105,6 +106,26 @@ public class UserController {
         } catch (Exception e) {
             log.error("Error: " + e.getMessage());
             return ResponseEntity.internalServerError().body(error(e.getMessage()));
+        }
+    }
+
+    @PutMapping
+    public ResponseEntity<?> update(@RequestBody @Valid ApiChangeRequests<UserDto> requests, Errors errors) {
+        if (errors.hasErrors()) {
+            log.warn("validation error");
+            return ResponseEntity.badRequest().body(validationFailed(apiValidation.getErrorMessages(errors)));
+        }
+
+        try {
+            var user = this.userService.mapToEntity(requests.getData());
+            user.setId(requests.getTargetId());
+
+            var updatedUser = this.userService.update(user);
+            return ResponseEntity.ok(success(updatedUser));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.badRequest().body(failed(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
