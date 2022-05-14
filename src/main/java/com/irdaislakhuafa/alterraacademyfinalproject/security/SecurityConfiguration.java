@@ -92,7 +92,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 // roles
                 .antMatchers(HttpMethod.GET, BASE_URL + "/roles/**").permitAll()
-                .antMatchers(HttpMethod.POST, BASE_URL + "/roles").hasAnyAuthority(ADMIN)
+                .antMatchers(HttpMethod.POST, BASE_URL + "/roles").permitAll()// .hasAnyAuthority(ADMIN)
                 .antMatchers(HttpMethod.PUT, BASE_URL + "/roles").hasAnyAuthority(ADMIN)
                 .antMatchers(HttpMethod.DELETE, BASE_URL + "/roles").hasAnyAuthority(ADMIN)
 
@@ -110,6 +110,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(BASE_URL + "/users/register", BASE_URL + "/users/auth").permitAll()
                 .antMatchers(HttpMethod.GET, BASE_URL + "/users").hasAnyAuthority(ADMIN)
                 .antMatchers(HttpMethod.DELETE, BASE_URL + "/users").hasAnyAuthority(ADMIN)
+                .antMatchers(HttpMethod.PUT, BASE_URL + "/users").hasAnyAuthority(ADMIN)
 
                 .anyRequest().authenticated()
 
