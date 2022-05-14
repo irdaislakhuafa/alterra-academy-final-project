@@ -78,6 +78,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // books borrowing student and book
                 .antMatchers(BASE_URL + "/books/borrowing/**").hasAnyAuthority(ADMIN, USER)
 
+                // categories
+                .antMatchers(HttpMethod.GET, BASE_URL + "/categories/**").permitAll()
+                .antMatchers(HttpMethod.POST, BASE_URL + "/categories").hasAnyAuthority(ADMIN, USER)
+                .antMatchers(HttpMethod.PUT, BASE_URL + "/categories").hasAnyAuthority(ADMIN, USER)
+                .antMatchers(HttpMethod.DELETE, BASE_URL + "/categories").hasAnyAuthority(ADMIN, USER)
+
                 // roles PUT/POST/DELETE (admin)
                 .antMatchers(HttpMethod.POST, BASE_URL + "/roles/").hasAnyAuthority(ADMIN)
                 .antMatchers(HttpMethod.PUT, BASE_URL + "/roles/").hasAnyAuthority(ADMIN)
