@@ -1,18 +1,17 @@
 package com.irdaislakhuafa.alterraacademyfinalproject.controllers.jsonplaceholder;
 
-import javax.validation.Valid;
-
-import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.jsonplaceholder.requests.*;
-import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.Role;
-import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.User;
-import com.irdaislakhuafa.alterraacademyfinalproject.services.RoleService;
-import com.irdaislakhuafa.alterraacademyfinalproject.services.UserService;
-import com.irdaislakhuafa.alterraacademyfinalproject.services.consume.JsonPlaceholderUserService;
 import static com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiResponse.*;
 
 import java.util.*;
 
-import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiResponse;
+import javax.validation.Valid;
+
+import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.jsonplaceholder.requests.FindByEmailRequest;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.dtos.jsonplaceholder.requests.Register;
+import com.irdaislakhuafa.alterraacademyfinalproject.model.entities.User;
+import com.irdaislakhuafa.alterraacademyfinalproject.services.RoleService;
+import com.irdaislakhuafa.alterraacademyfinalproject.services.UserService;
+import com.irdaislakhuafa.alterraacademyfinalproject.services.consume.JsonPlaceholderUserService;
 import com.irdaislakhuafa.alterraacademyfinalproject.utils.ApiValidation;
 
 import org.springframework.http.ResponseEntity;
