@@ -22,8 +22,8 @@ public class JsonPlaceholderUserService {
     private String jsonPlaceholderUserUrl;
 
     public List<User> findAll() {
-        List<User> list = (List<User>) restTemplate.getForObject(jsonPlaceholderUserUrl, Object.class);
-        return list;
+        var list = restTemplate.getForObject(jsonPlaceholderUserUrl, User[].class);
+        return Arrays.asList(list);
     }
 
     public Optional<User> findByEmail(String email) throws NoSuchElementException {
