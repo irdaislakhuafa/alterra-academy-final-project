@@ -33,9 +33,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final String ADMIN = "ROLE_ADMIN";
     private final String USER = "ROLE_USER";
-    private final String AUTHOR = "ROLE_AUTHOR";
-    private final String PUBLISHER = "PUBLISHER";
-    private final String STUDENT = "STUDENT";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -57,18 +54,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .permitAll()
 
                 // author address (PermitAll)
-                .antMatchers(
-                        HttpMethod.GET,
-                        BASE_URL + "/authors/address")
+                .antMatchers(HttpMethod.GET, BASE_URL + "/authors/address")
                 .permitAll()
                 // author address PUT/POST/DELETE
-                .antMatchers(
-                        HttpMethod.PUT,
-                        BASE_URL + "/authors/address",
-                        BASE_URL + "/authors/address/")
-                .hasAnyAuthority(ADMIN)
+                .antMatchers(HttpMethod.PUT, BASE_URL + "/authors/address").hasAnyAuthority(ADMIN, USER)
+                .antMatchers(HttpMethod.POST, BASE_URL + "/authors/address").hasAnyAuthority(ADMIN, USER)
+                .antMatchers(HttpMethod.DELETE, BASE_URL + "/authors/address").hasAnyAuthority(ADMIN, USER)
 
-                // admin
+                // authors
                 .antMatchers(
                         // authors
                         BASE_URL + "/authors",
