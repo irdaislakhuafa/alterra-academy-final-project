@@ -175,7 +175,8 @@ public class UserServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testUpdateFailed() {
-
+        when(this.userRepository.findByEmailEqualsIgnoreCase(anyString())).thenReturn(Optional.empty());
+        assertThrows(NoSuchElementException.class, () -> this.userService.update(user));
     }
 
     @Test
