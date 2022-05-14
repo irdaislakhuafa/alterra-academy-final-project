@@ -106,11 +106,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, BASE_URL + "/students/address").hasAnyAuthority(ADMIN, USER)
                 .antMatchers(HttpMethod.DELETE, BASE_URL + "/students/address").hasAnyAuthority(ADMIN, USER)
 
-                // user (PermitAll)
-                .antMatchers(
-                        BASE_URL + "/users/register",
-                        BASE_URL + "/users/auth")
-                .permitAll()
+                // users
+                .antMatchers(BASE_URL + "/users/register", BASE_URL + "/users/auth").permitAll()
+                .antMatchers(HttpMethod.GET, BASE_URL + "/users").hasAnyAuthority(ADMIN)
+                .antMatchers(HttpMethod.DELETE, BASE_URL + "/users").hasAnyAuthority(ADMIN)
 
                 .anyRequest().authenticated()
 
