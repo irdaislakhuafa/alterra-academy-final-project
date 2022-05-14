@@ -43,6 +43,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 // swagger docs and init (PermitAll)
                 .antMatchers(
+                        // json placeholder
+                        "/api/v1/jsonplaceholder/users",
+
                         // init
                         "/",
                         BASE_URL + "/hello-world",
