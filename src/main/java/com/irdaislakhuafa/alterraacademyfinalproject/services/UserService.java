@@ -31,7 +31,7 @@ public class UserService implements UserDetailsService, BaseService<User, UserDt
 
     @Override
     public Optional<User> update(User entity) throws NoSuchElementException {
-        if (!this.findByEmail(entity.getEmail()).isPresent()) {
+        if (!this.userRepository.findByEmailEqualsIgnoreCase(entity.getEmail()).isPresent()) {
             throw new NoSuchElementException("user not found");
         }
         return Optional.of(this.userRepository.save(entity));
