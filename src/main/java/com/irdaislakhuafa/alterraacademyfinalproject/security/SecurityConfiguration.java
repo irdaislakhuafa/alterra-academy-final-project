@@ -96,6 +96,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, BASE_URL + "/roles").hasAnyAuthority(ADMIN)
                 .antMatchers(HttpMethod.DELETE, BASE_URL + "/roles").hasAnyAuthority(ADMIN)
 
+                // students
+                .antMatchers(HttpMethod.GET, BASE_URL + "/students/**", "/students").hasAnyAuthority(ADMIN)
+                .antMatchers(HttpMethod.POST, BASE_URL + "/students").hasAnyAuthority(ADMIN, USER)
+                .antMatchers(HttpMethod.PUT, BASE_URL + "/students").hasAnyAuthority(ADMIN, USER)
+                .antMatchers(HttpMethod.DELETE, BASE_URL + "/students").hasAnyAuthority(ADMIN)
+
                 // user (PermitAll)
                 .antMatchers(
                         BASE_URL + "/users/register",
