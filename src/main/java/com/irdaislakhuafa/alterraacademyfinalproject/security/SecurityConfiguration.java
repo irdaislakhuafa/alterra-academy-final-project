@@ -73,6 +73,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(BASE_URL + "/books/authors").hasAnyAuthority(ADMIN, USER)
                 // books categories
                 .antMatchers(BASE_URL + "/books/categories").hasAnyAuthority(ADMIN, USER)
+                // books publishers
+                .antMatchers(BASE_URL + "/books/publishers").hasAnyAuthority(ADMIN, USER)
 
                 // roles PUT/POST/DELETE (admin)
                 .antMatchers(HttpMethod.POST, BASE_URL + "/roles/").hasAnyAuthority(ADMIN)
