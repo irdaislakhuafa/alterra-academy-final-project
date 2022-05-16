@@ -167,6 +167,7 @@ public class UserServiceTest implements BaseServiceTest {
     @Override
     public void testUpdateSuccess() {
         when(this.userRepository.save(any())).thenReturn(user);
+        when(this.userRepository.findByEmailEqualsIgnoreCase(anyString())).thenReturn(Optional.of(user));
         var result = this.userService.update(user);
         assertTrue(result.isPresent());
     }
@@ -174,7 +175,8 @@ public class UserServiceTest implements BaseServiceTest {
     @Test
     @Override
     public void testUpdateFailed() {
-
+        when(this.userRepository.findByEmailEqualsIgnoreCase(anyString())).thenReturn(Optional.empty());
+        assertThrows(NoSuchElementException.class, () -> this.userService.update(user));
     }
 
     @Test
