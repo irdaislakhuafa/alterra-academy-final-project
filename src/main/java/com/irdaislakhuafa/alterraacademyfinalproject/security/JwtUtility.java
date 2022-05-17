@@ -15,19 +15,20 @@ public class JwtUtility {
     @Value(value = "{app.key.secret}")
     private String SECRET;
 
-    private final Long currentMillis = System.currentTimeMillis();
-    private final Date CREATED_AT = new Date(currentMillis);
-    private final Date EXPIRED_AT = new Date(currentMillis + (1000 * 60 * 60));
+    @Value(value = "${app.key.secret.expiration.in.minute}")
+    private int EXPIRATION_IN_MINUTE;
 
     public String generateTokenFromUser(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("user_id", user.getId());
         claims.put("user_roles", user.getAuthorities());
 
+        final Long currentMillis = System.currentTimeMillis();
+
         String token = Jwts.builder()
                 .setClaims(claims)
-                .setIssuedAt(CREATED_AT)
-                .setExpiration(EXPIRED_AT)
+                .setIssuedAt(new Date(currentMillis))
+                .setExpiration(new Date(currentMillis + ((1000 * 60) * EXPIRATION_IN_MINUTE)))
                 .signWith(SignatureAlgorithm.HS256, SECRET)
                 .compact();
         return token;
